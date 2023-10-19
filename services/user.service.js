@@ -10,7 +10,7 @@ class UserService {
     let { user } = await userDataLayer.findById(userId);
 
     if (!user) {
-      throw new AppError({ message: ['User not found!'] }, 404);
+      throw new AppError({ message: 'User not found!' }, 404);
     }
 
     user = {
@@ -32,7 +32,7 @@ class UserService {
     });
 
     if (existingUser) {
-      throw new AppError({ message: ['Email is already taken!'] }, 400);
+      throw new AppError({ email: 'Email is already registered!' }, 400);
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -56,13 +56,13 @@ class UserService {
     });
 
     if (!user) {
-      throw new AppError({ message: ['Email is not registered!'] }, 400);
+      throw new AppError({ email: 'Email is not registered!' }, 400);
     }
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
     if (!isPasswordCorrect) {
-      const errMessage = { message: ['Password is incorrect'] };
+      const errMessage = { password: 'Password is incorrect!' };
       throw new AppError(errMessage, 400);
     }
 

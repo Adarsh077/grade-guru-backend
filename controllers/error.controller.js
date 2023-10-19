@@ -16,6 +16,7 @@ const handleDuplicateFieldsDB = (err) => {
 
 const handleCelebrateError = (err) => {
   const errors = {};
+
   // eslint-disable-next-line no-restricted-syntax
   for (const [key] of err.details) {
     // eslint-disable-next-line no-loop-func
@@ -30,9 +31,7 @@ const handleCelebrateError = (err) => {
     });
   }
 
-  const message = Object.keys(errors).map((error) => errors[error]);
-
-  return new AppError({ message }, 400);
+  return new AppError(errors, 400);
 };
 
 const handleValidationErrorDB = (err) => {
@@ -55,7 +54,7 @@ const sendError = (err, res) => {
 
     res.status(err.statusCode).json({
       status: err.status,
-      reason: message,
+      message: message,
     });
 
     // Programming or other unknown error: don't leak error details
