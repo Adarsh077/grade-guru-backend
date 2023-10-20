@@ -1,3 +1,4 @@
 exports.authValidator = require('./auth.validator');
-exports.departmentValidator = require('./department.validator');
 exports.batchValidator = require('./batch.validator');
+exports.departmentValidator = require('./department.validator');
+exports.semesterValidator = require('./semester.validator');

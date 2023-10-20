@@ -9,5 +9,6 @@ router.use(authMiddleware);
 router.use('/user', require('./user.route'));
 router.use('/batches', require('./batch.route'));
 router.use('/departments', require('./department.route'));
+router.use('/semesters', require('./semester.route'));
 
 module.exports = router;
