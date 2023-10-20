@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const { departmentDataLayer } = require('../data');
+const { AppError } = require('../utils');
 
 class DepartmentService {
   async create(data) {
@@ -21,26 +21,24 @@ class DepartmentService {
   }
 
   async findById(departmentId) {
-    const { department } = await departmentDataLayer.findOne({
-      _id: mongoose.Types.ObjectId(departmentId),
-      isDeleted: false,
-    });
+    const { department } = await departmentDataLayer.findById(departmentId);
 
-    if (department.isDeleted) {
-      return { department: null };
+    if (!department) {
+      throw new AppError({ message: 'Department not found!' }, 404);
     }
 
     return { department };
   }
 
   async updateById(departmentId, { hod, name }) {
-    const { department } = await departmentDataLayer.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(departmentId), isDeleted: false },
-      {
-        hod,
-        name,
-      },
-    );
+    const { department } = await departmentDataLayer.updateById(departmentId, {
+      hod,
+      name,
+    });
+
+    if (!department) {
+      throw new AppError({ message: 'Department not found!' }, 404);
+    }
 
     return { department };
   }

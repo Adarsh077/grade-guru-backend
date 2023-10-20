@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const { DepartmentModel } = require('../models');
 
 class DepartmentDataLayer {
@@ -27,10 +28,10 @@ class DepartmentDataLayer {
   }
 
   async findById(departmentId) {
-    const department = await DepartmentModel.findById(departmentId).populate(
-      'hod',
-      '_id name',
-    );
+    const department = await DepartmentModel.findOne({
+      _id: new mongoose.Types.ObjectId(departmentId),
+      isDeleted: false,
+    }).populate('hod', '_id name');
 
     return { department };
   }
@@ -44,10 +45,10 @@ class DepartmentDataLayer {
       updateData.hod = hod;
     }
 
-    const department = await DepartmentModel.findByIdAndUpdate(
-      departmentId,
+    const department = await DepartmentModel.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(departmentId), isDeleted: false },
       {
-        $set: { name, hod },
+        $set: updateData,
       },
       { new: true },
     );
