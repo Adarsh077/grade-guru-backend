@@ -4,3 +4,4 @@ exports.userController = require('./user.controller');
 exports.batchController = require('./batch.controller');
 exports.departmentController = require('./department.controller');
 exports.semesterController = require('./semester.controller');
+exports.subjectController = require('./subject.controller');
