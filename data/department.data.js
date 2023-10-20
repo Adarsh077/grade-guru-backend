@@ -10,13 +10,18 @@ class DepartmentDataLayer {
   }
 
   async findAll() {
-    const departments = await DepartmentModel.find({ isDeleted: false });
+    const departments = await DepartmentModel.find({
+      isDeleted: false,
+    }).populate('hod', '_id name');
 
     return { departments };
   }
 
   async findById(departmentId) {
-    const department = await DepartmentModel.findById(departmentId);
+    const department = await DepartmentModel.findById(departmentId).populate(
+      'hod',
+      '_id name',
+    );
 
     return { department };
   }

@@ -6,6 +6,34 @@ const appConfig = require('../config');
 const { AppError } = require('../utils');
 
 class UserService {
+  async getUserDetails(userId) {
+    let { user } = await userDataLayer.findById(userId);
+
+    if (!user) {
+      throw new AppError({ message: 'User not found!' }, 404);
+    }
+
+    user = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    };
+
+    return { user };
+  }
+
+  async search({ query }) {
+    const { users } = await userDataLayer.search({
+      query,
+    });
+
+    if (!users) {
+      return { users: [] };
+    }
+
+    return { users };
+  }
+
   async getJwtTokenByUserId(userId) {
     let { user } = await userDataLayer.findById(userId);
 

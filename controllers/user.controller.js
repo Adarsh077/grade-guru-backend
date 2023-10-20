@@ -1,31 +1,22 @@
 const { userService } = require('../services');
 const { catchAsync } = require('../utils');
 
-exports.register = catchAsync(async (req, res) => {
-  const { name, email, password } = req.body;
-
-  const { token } = await userService.register({ name, email, password });
+exports.getUserDetails = catchAsync(async (req, res) => {
+  const { user } = await userService.getUserDetails(req.user._id);
 
   res.send({
     status: 'success',
-    body: {
-      token,
-    },
+    body: { user },
   });
 });
 
-exports.login = catchAsync(async (req, res) => {
-  const { email, password } = req.body;
+exports.search = catchAsync(async (req, res) => {
+  const { query } = req.query;
 
-  const { token } = await userService.login({
-    email,
-    password,
-  });
+  const { users } = await userService.search({ query });
 
   res.send({
     status: 'success',
-    body: {
-      token,
-    },
+    body: { users },
   });
 });

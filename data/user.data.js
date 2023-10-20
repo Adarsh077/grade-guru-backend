@@ -1,12 +1,23 @@
 const { UserModel } = require('../models');
 
-class TodoDataLayer {
+class UserDataLayer {
   async createUser(data) {
     const { name, email, password } = data;
 
     const user = await UserModel.create({ name, email, password });
 
     return { user };
+  }
+
+  async search({ query }) {
+    const users = await UserModel.find({
+      $or: [
+        { email: new RegExp(query, 'i') },
+        { name: new RegExp(query, 'i') },
+      ],
+    });
+
+    return { users };
   }
 
   async findOne({ email }) {
@@ -22,4 +33,4 @@ class TodoDataLayer {
   }
 }
 
-module.exports = new TodoDataLayer();
+module.exports = new UserDataLayer();
