@@ -2,17 +2,26 @@ const { DepartmentModel } = require('../models');
 
 class DepartmentDataLayer {
   async create(data) {
-    const { name, hod } = data;
+    const { name, hod, batch } = data;
 
-    const department = await DepartmentModel.create({ name, hod });
+    const department = await DepartmentModel.create({ name, hod, batch });
 
     return { department };
   }
 
-  async findAll() {
-    const departments = await DepartmentModel.find({
+  async findAll({ batch }) {
+    const filter = {
       isDeleted: false,
-    }).populate('hod', '_id name');
+    };
+
+    if (batch) {
+      filter.batch = batch;
+    }
+
+    const departments = await DepartmentModel.find(filter).populate(
+      'hod',
+      '_id name',
+    );
 
     return { departments };
   }

@@ -2,11 +2,12 @@ const { departmentService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { name, hod } = req.body;
+  const { name, hod, batch } = req.body;
 
   const { department } = await departmentService.create({
     name,
     hod,
+    batch,
   });
 
   res.send({
@@ -31,7 +32,11 @@ exports.deleteById = catchAsync(async (req, res) => {
 });
 
 exports.findAll = catchAsync(async (req, res) => {
-  const { departments } = await departmentService.findAll();
+  const { batch } = req.query;
+
+  const { departments } = await departmentService.findAll({
+    batch: batch,
+  });
 
   res.send({
     status: 'success',

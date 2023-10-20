@@ -5,7 +5,7 @@ const { departmentValidator } = require('../validators');
 
 router
   .route('/')
-  .get(departmentController.findAll)
+  .get(departmentValidator.findAll, departmentController.findAll)
   .post(departmentValidator.create, departmentController.create);
 
 router

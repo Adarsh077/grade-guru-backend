@@ -3,18 +3,19 @@ const { departmentDataLayer } = require('../data');
 
 class DepartmentService {
   async create(data) {
-    const { name, hod } = data;
+    const { name, hod, batch } = data;
 
     const { department } = await departmentDataLayer.create({
       name,
       hod,
+      batch,
     });
 
     return { department };
   }
 
-  async findAll() {
-    const { departments } = await departmentDataLayer.findAll();
+  async findAll({ batch }) {
+    const { departments } = await departmentDataLayer.findAll({ batch });
 
     return { departments };
   }

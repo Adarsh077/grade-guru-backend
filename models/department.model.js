@@ -9,7 +9,11 @@ const DepartmentSchema = mongoose.Schema(
     hod: {
       type: mongoose.Types.ObjectId,
       ref: 'users',
-      default: null,
+      required: true,
+    },
+    batch: {
+      type: String,
+      required: true,
     },
     isDeleted: {
       type: Boolean,
