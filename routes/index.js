@@ -1,10 +1,12 @@
 const router = require('express').Router();
 
 const authMiddleware = require('../middlewares/auth.middleware');
+const CaslMiddleware = require('../middlewares/casl.middleware');
 
 router.use('/auth', require('./auth.route'));
 
 router.use(authMiddleware);
+router.use(CaslMiddleware.attachUserAbility);
 
 router.use('/user', require('./user.route'));
 router.use('/batches', require('./batch.route'));

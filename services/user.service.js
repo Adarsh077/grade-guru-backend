@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const { userDataLayer } = require('../data');
 const appConfig = require('../config');
 const { AppError } = require('../utils');
+const RoleAbilities = require('../constants/abilities');
+const userAbilityService = require('./user-ability.service');
 
 class UserService {
   async getUserDetails(userId) {
@@ -53,7 +55,7 @@ class UserService {
   }
 
   async register(data) {
-    const { name, email, password } = data;
+    const { name, email, password, role } = data;
 
     const { user: existingUser } = await userDataLayer.findOne({
       email: email,
@@ -70,6 +72,8 @@ class UserService {
       email,
       password: hashedPassword,
     });
+
+    await this.updateUserAbilities({ role, userId: user._id });
 
     const { token } = await this.getJwtTokenByUserId(user._id);
 
@@ -97,6 +101,20 @@ class UserService {
     const { token } = await this.getJwtTokenByUserId(user._id);
 
     return { token };
+  }
+
+  async updateUserAbilities({ userId, role }) {
+    const statements = RoleAbilities[role];
+    if (
+      statements &&
+      typeof statements === 'object' &&
+      Object.keys(statements).length
+    ) {
+      await userAbilityService.upsert({
+        userId: userId,
+        statements: statements,
+      });
+    }
   }
 }
 

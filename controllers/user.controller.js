@@ -10,6 +10,19 @@ exports.getUserDetails = catchAsync(async (req, res) => {
   });
 });
 
+exports.updateUserAbilties = catchAsync(async (req, res) => {
+  const { role } = req.body;
+
+  await userService.updateUserAbilities({
+    role,
+    userId: req.user._id,
+  });
+
+  res.send({
+    status: 'success',
+  });
+});
+
 exports.search = catchAsync(async (req, res) => {
   const { query } = req.query;
 

@@ -1,4 +1,5 @@
 exports.UserModel = require('./user.model');
+exports.UserAbilityModel = require('./user-ability.model');
 exports.BatchModel = require('./batch.model');
 exports.DepartmentModel = require('./department.model');
 exports.SemesterModel = require('./semester.model');

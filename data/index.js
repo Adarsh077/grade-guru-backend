@@ -1,4 +1,5 @@
 exports.userDataLayer = require('./user.data');
+exports.userAbilityDataLayer = require('./user-ability.data');
 exports.batchDataLayer = require('./batch.data');
 exports.departmentDataLayer = require('./department.data');
 exports.semesterDataLayer = require('./semester.data');

@@ -10,7 +10,7 @@ class BatchDataLayer {
   }
 
   async findAll() {
-    const batches = await BatchModel.find();
+    const batches = await BatchModel.find().sort('-createdAt');
 
     return { batches };
   }

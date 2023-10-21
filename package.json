@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "bcrypt": "^5.1.1",
     "celebrate": "^15.0.1",
     "cors": "^2.8.5",
