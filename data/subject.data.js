@@ -14,13 +14,23 @@ class SubjectDataLayer {
     return { subject };
   }
 
-  async findAll({ semesterId }) {
+  async findAll({ semesterId, staffId, semesterIds }) {
     const filter = {
       isDeleted: false,
     };
 
     if (semesterId) {
       filter.semester = semesterId;
+    }
+
+    if (semesterIds && Array.isArray(semesterIds) && semesterIds.length) {
+      filter.semester = {
+        $in: semesterIds.map((id) => new mongoose.Types.ObjectId(id)),
+      };
+    }
+
+    if (staffId) {
+      filter.staff = staffId;
     }
 
     const subjects = await SubjectModel.find(filter).populate(

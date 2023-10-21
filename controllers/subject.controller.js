@@ -1,4 +1,8 @@
-const { subjectService } = require('../services');
+const {
+  subjectService,
+  departmentService,
+  semesterService,
+} = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
@@ -24,6 +28,48 @@ exports.findAll = catchAsync(async (req, res) => {
 
   const { subjects } = await subjectService.findAll({
     semesterId,
+  });
+
+  res.send({
+    status: 'success',
+    body: {
+      subjects,
+    },
+  });
+});
+
+exports.findMySubjects = catchAsync(async (req, res) => {
+  const { batch } = req.query;
+
+  const { departments } = await departmentService.findAll({
+    batch,
+  });
+
+  if (!departments || !departments.length) {
+    return res.send({
+      status: 'success',
+      body: {
+        subjects: [],
+      },
+    });
+  }
+
+  const { semesters } = await semesterService.findAll({
+    departmentIds: departments.map((department) => department._id),
+  });
+
+  if (!semesters || !semesters.length) {
+    return res.send({
+      status: 'success',
+      body: {
+        subjects: [],
+      },
+    });
+  }
+
+  const { subjects } = await subjectService.findAll({
+    staffId: req.user._id,
+    semesterIds: semesters.map((semester) => semester._id),
   });
 
   res.send({

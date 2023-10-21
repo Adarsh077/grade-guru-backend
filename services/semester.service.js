@@ -13,8 +13,11 @@ class SemesterService {
     return { semester };
   }
 
-  async findAll({ departmentId }) {
-    const { semesters } = await semesterDataLayer.findAll({ departmentId });
+  async findAll({ departmentId, departmentIds }) {
+    const { semesters } = await semesterDataLayer.findAll({
+      departmentId,
+      departmentIds,
+    });
     return { semesters };
   }
 

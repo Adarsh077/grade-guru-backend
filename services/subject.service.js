@@ -14,8 +14,12 @@ class SubjectService {
     return { subject };
   }
 
-  async findAll({ semesterId }) {
-    const { subjects } = await subjectDataLayer.findAll({ semesterId });
+  async findAll({ semesterId, staffId, semesterIds }) {
+    const { subjects } = await subjectDataLayer.findAll({
+      semesterId,
+      staffId,
+      semesterIds,
+    });
     return { subjects };
   }
 

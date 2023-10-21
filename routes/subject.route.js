@@ -3,6 +3,12 @@ const router = require('express').Router();
 const { subjectController } = require('../controllers');
 const { subjectValidator } = require('../validators');
 
+router.get(
+  '/my',
+  subjectValidator.findMySubjects,
+  subjectController.findMySubjects,
+);
+
 router
   .route('/:subjectId')
   .get(subjectValidator.findById, subjectController.findById)

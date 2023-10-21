@@ -13,7 +13,7 @@ class SemesterDataLayer {
     return { semester };
   }
 
-  async findAll({ departmentId }) {
+  async findAll({ departmentId, departmentIds }) {
     const filter = {
       isDeleted: false,
     };
@@ -21,6 +21,13 @@ class SemesterDataLayer {
     if (departmentId) {
       filter.department = departmentId;
     }
+
+    if (departmentIds && Array.isArray(departmentIds) && departmentIds.length) {
+      filter.department = {
+        $in: departmentIds.map((id) => new mongoose.Types.ObjectId(id)),
+      };
+    }
+
     const semesters = await SemesterModel.find(filter);
 
     return { semesters };

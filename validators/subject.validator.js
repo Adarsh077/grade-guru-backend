@@ -28,6 +28,12 @@ exports.findById = celebrate({
   }),
 });
 
+exports.findMySubjects = celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    batch: Joi.string().required(),
+  }),
+});
+
 exports.updateById = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     subjectId: Joi.string().required(),
