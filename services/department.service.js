@@ -3,19 +3,24 @@ const { AppError } = require('../utils');
 
 class DepartmentService {
   async create(data) {
-    const { name, hod, batch } = data;
+    const { name, hod, batch, ability } = data;
 
     const { department } = await departmentDataLayer.create({
       name,
       hod,
       batch,
+      ability,
     });
 
     return { department };
   }
 
-  async findAll({ batch }) {
-    const { departments } = await departmentDataLayer.findAll({ batch });
+  async findAll({ batch, hod, ability }) {
+    const { departments } = await departmentDataLayer.findAll({
+      batch,
+      hod,
+      ability,
+    });
 
     return { departments };
   }

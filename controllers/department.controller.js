@@ -8,6 +8,7 @@ exports.create = catchAsync(async (req, res) => {
     name,
     hod,
     batch,
+    ability: req.user.ability,
   });
 
   res.send({
@@ -36,6 +37,7 @@ exports.findAll = catchAsync(async (req, res) => {
 
   const { departments } = await departmentService.findAll({
     batch: batch,
+    ability: req.user.ability,
   });
 
   res.send({

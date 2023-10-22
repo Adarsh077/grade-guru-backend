@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const {
+  accessibleRecordsPlugin,
+  accessibleFieldsPlugin,
+} = require('@casl/mongoose');
 
 const BatchSchema = mongoose.Schema(
   {
@@ -12,5 +16,8 @@ const BatchSchema = mongoose.Schema(
     timestamps: true,
   },
 );
+
+BatchSchema.plugin(accessibleRecordsPlugin);
+BatchSchema.plugin(accessibleFieldsPlugin);
 
 module.exports = mongoose.model('batches', BatchSchema);

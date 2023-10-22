@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const {
+  accessibleRecordsPlugin,
+  accessibleFieldsPlugin,
+} = require('@casl/mongoose');
 
 const UserSchema = mongoose.Schema(
   {
@@ -24,5 +28,8 @@ const UserSchema = mongoose.Schema(
     timestamps: true,
   },
 );
+
+UserSchema.plugin(accessibleRecordsPlugin);
+UserSchema.plugin(accessibleFieldsPlugin);
 
 module.exports = mongoose.model('users', UserSchema);

@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const {
+  accessibleRecordsPlugin,
+  accessibleFieldsPlugin,
+} = require('@casl/mongoose');
 
 const SemesterSchema = mongoose.Schema(
   {
@@ -20,5 +24,8 @@ const SemesterSchema = mongoose.Schema(
     timestamps: true,
   },
 );
+
+SemesterSchema.plugin(accessibleRecordsPlugin);
+SemesterSchema.plugin(accessibleFieldsPlugin);
 
 module.exports = mongoose.model('semesters', SemesterSchema);

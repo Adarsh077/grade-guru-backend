@@ -5,10 +5,10 @@ const { userValidator } = require('../validators');
 
 router.get('/', userController.getUserDetails);
 router.get('/search', userValidator.search, userController.search);
-router.put(
-  '/ability',
-  userValidator.updateUserAbilties,
-  userController.updateUserAbilties,
-);
+
+router
+  .route('/ability')
+  .put(userValidator.updateUserAbilties, userController.updateUserAbilties)
+  .get(userController.getUserAbilityStatements);
 
 module.exports = router;

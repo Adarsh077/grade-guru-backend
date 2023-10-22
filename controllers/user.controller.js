@@ -1,5 +1,6 @@
 const { userService } = require('../services');
 const { catchAsync } = require('../utils');
+const CaslFunctions = require('../casl/casl.functions');
 
 exports.getUserDetails = catchAsync(async (req, res) => {
   const { user } = await userService.getUserDetails(req.user._id);
@@ -7,6 +8,15 @@ exports.getUserDetails = catchAsync(async (req, res) => {
   res.send({
     status: 'success',
     body: { user },
+  });
+});
+
+exports.getUserAbilityStatements = catchAsync(async (req, res) => {
+  const statements = await CaslFunctions.getStatementsByUser(req.user);
+
+  res.send({
+    status: 'success',
+    body: { statements },
   });
 });
 

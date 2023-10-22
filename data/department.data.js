@@ -1,16 +1,28 @@
 const { default: mongoose } = require('mongoose');
 const { DepartmentModel } = require('../models');
+const { AppError } = require('../utils');
+const caslEnum = require('../casl/casl.enum');
 
 class DepartmentDataLayer {
   async create(data) {
-    const { name, hod, batch } = data;
+    const { name, hod, batch, ability } = data;
+
+    if (
+      !ability ||
+      ability.cannot(caslEnum.actions.create, caslEnum.subjects.departments)
+    ) {
+      throw new AppError(
+        { message: 'You are not authorized to create department!' },
+        403,
+      );
+    }
 
     const department = await DepartmentModel.create({ name, hod, batch });
 
     return { department };
   }
 
-  async findAll({ batch }) {
+  async findAll({ batch, hod, ability }) {
     const filter = {
       isDeleted: false,
     };
@@ -19,10 +31,17 @@ class DepartmentDataLayer {
       filter.batch = batch;
     }
 
-    const departments = await DepartmentModel.find(filter).populate(
-      'hod',
-      '_id name',
-    );
+    if (hod) {
+      filter.hod = new mongoose.Types.ObjectId(hod);
+    }
+
+    const query = DepartmentModel.find(filter);
+
+    if (ability) {
+      query.accessibleBy(ability);
+    }
+
+    const departments = await query.populate('hod', '_id name');
 
     return { departments };
   }
