@@ -4,6 +4,7 @@ const { userController } = require('../controllers');
 const { userValidator } = require('../validators');
 
 router.get('/', userController.getUserDetails);
+router.get('/all', userController.findAll);
 router.get('/search', userValidator.search, userController.search);
 
 router

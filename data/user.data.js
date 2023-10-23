@@ -26,6 +26,11 @@ class UserDataLayer {
     return { user };
   }
 
+  async findAll() {
+    const users = await UserModel.find();
+    return { users };
+  }
+
   async findById(userId) {
     const user = await UserModel.findById(userId);
 

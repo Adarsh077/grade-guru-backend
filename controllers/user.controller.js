@@ -43,3 +43,12 @@ exports.search = catchAsync(async (req, res) => {
     body: { users },
   });
 });
+
+exports.findAll = catchAsync(async (req, res) => {
+  const { users } = await userService.findAll();
+
+  res.send({
+    status: 'success',
+    body: { users },
+  });
+});

@@ -36,6 +36,16 @@ class UserService {
     return { users };
   }
 
+  async findAll() {
+    const { users } = await userDataLayer.findAll();
+
+    if (!users) {
+      return { users: [] };
+    }
+
+    return { users };
+  }
+
   async getJwtTokenByUserId(userId) {
     let { user } = await userDataLayer.findById(userId);
 
