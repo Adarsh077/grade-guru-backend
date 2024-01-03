@@ -4,3 +4,4 @@ exports.batchService = require('./batch.service');
 exports.departmentService = require('./department.service');
 exports.semesterService = require('./semester.service');
 exports.subjectService = require('./subject.service');
+exports.studentsBySemesterService = require('./students-by-semester.service');

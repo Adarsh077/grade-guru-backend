@@ -1,7 +1,15 @@
 const router = require('express').Router();
 
-const { semesterController, subjectController } = require('../controllers');
-const { semesterValidator, subjectValidator } = require('../validators');
+const {
+  semesterController,
+  subjectController,
+  studentsBySemesterController,
+} = require('../controllers');
+const {
+  semesterValidator,
+  subjectValidator,
+  studentsBySemesterValidator,
+} = require('../validators');
 
 router
   .route('/:semesterId')
@@ -13,5 +21,16 @@ router
   .route('/:semesterId/subjects')
   .post(subjectValidator.create, subjectController.create)
   .get(subjectValidator.findAll, subjectController.findAll);
+
+router
+  .route('/:semesterId/students')
+  .get(
+    studentsBySemesterValidator.findOneBySemesterId,
+    studentsBySemesterController.findOneBySemesterId,
+  )
+  .patch(
+    studentsBySemesterValidator.updateBySemesterId,
+    studentsBySemesterController.updateBySemesterId,
+  );
 
 module.exports = router;

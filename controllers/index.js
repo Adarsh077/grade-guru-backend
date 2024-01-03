@@ -5,3 +5,4 @@ exports.batchController = require('./batch.controller');
 exports.departmentController = require('./department.controller');
 exports.semesterController = require('./semester.controller');
 exports.subjectController = require('./subject.controller');
+exports.studentsBySemesterController = require('./students-by-semester.controller');
