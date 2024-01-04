@@ -43,9 +43,7 @@ class StudentsBySemesterDataLayer {
 
     await Promise.all(updatePromises);
 
-    const { studentsBySemester } = await this.findOneBy({ semesterId });
-
-    return { studentsBySemester };
+    return { success: true };
   }
 
   async findOneBy({ semesterId }) {

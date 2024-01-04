@@ -10,13 +10,12 @@ class StudentsBySemesterService {
   }
 
   async findOneAndUpdate({ semesterId }, { students }) {
-    const { studentsBySemester } =
-      await studentsBySemesterDataLayer.findOneAndUpdate(
-        { semesterId },
-        { students },
-      );
+    const { success } = await studentsBySemesterDataLayer.findOneAndUpdate(
+      { semesterId },
+      { students },
+    );
 
-    return { studentsBySemester };
+    return { success };
   }
 }
 

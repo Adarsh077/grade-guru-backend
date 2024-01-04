@@ -18,14 +18,12 @@ exports.updateBySemesterId = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
   const { students } = req.body;
 
-  const { studentsBySemester } =
-    await studentsBySemesterService.findOneAndUpdate(
-      { semesterId },
-      { students },
-    );
+  await studentsBySemesterService.findOneAndUpdate(
+    { semesterId },
+    { students },
+  );
 
   res.send({
     status: 'success',
-    body: { studentsBySemester },
   });
 });
