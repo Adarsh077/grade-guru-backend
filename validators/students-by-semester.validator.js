@@ -6,6 +6,15 @@ exports.findOneBySemesterId = celebrate({
   }),
 });
 
+exports.addBySemesterId = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    semesterId: Joi.string().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    students: Joi.array(),
+  }),
+});
+
 exports.updateBySemesterId = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     semesterId: Joi.string().required(),

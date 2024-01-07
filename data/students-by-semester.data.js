@@ -2,23 +2,22 @@ const mongoose = require('mongoose');
 const { StudentsBySemesterModel } = require('../models');
 
 class StudentsBySemesterDataLayer {
+  async addStudents({ semesterId }, { students }) {
+    const studentsBySemester = await StudentsBySemesterModel.findOneAndUpdate(
+      { semester: semesterId },
+      {
+        $push: { students: { $each: students } },
+      },
+      { upsert: true, new: true },
+    );
+
+    return { studentsBySemester: studentsBySemester.students };
+  }
+
   async findOneAndUpdate({ semesterId }, { students }) {
     const updatePromises = students.map(
       (student) =>
         new Promise((resolve, reject) => {
-          if (!student._id) {
-            StudentsBySemesterModel.findOneAndUpdate(
-              { semester: semesterId },
-              {
-                $push: { students: student },
-              },
-              { upsert: true, new: true },
-            )
-              .then(resolve)
-              .catch(reject);
-            return;
-          }
-
           this.findOneBy({ semesterId })
             .then(({ studentsBySemester: studentsBySemesterCurrent }) => {
               const studentIndex = studentsBySemesterCurrent.findIndex(

@@ -24,6 +24,10 @@ router
 
 router
   .route('/:semesterId/students')
+  .post(
+    studentsBySemesterValidator.addBySemesterId,
+    studentsBySemesterController.addStudents,
+  )
   .get(
     studentsBySemesterValidator.findOneBySemesterId,
     studentsBySemesterController.findOneBySemesterId,

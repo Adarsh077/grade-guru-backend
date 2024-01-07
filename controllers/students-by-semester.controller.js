@@ -14,6 +14,21 @@ exports.findOneBySemesterId = catchAsync(async (req, res) => {
   });
 });
 
+exports.addStudents = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+  const { students } = req.body;
+
+  const { studentsBySemester } = await studentsBySemesterService.addStudents(
+    { semesterId },
+    { students },
+  );
+
+  res.send({
+    status: 'success',
+    body: { studentsBySemester },
+  });
+});
+
 exports.updateBySemesterId = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
   const { students } = req.body;
