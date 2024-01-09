@@ -36,13 +36,11 @@ exports.updateMarksOfStudent = catchAsync(async (req, res) => {
   const { subjectId } = req.params;
   const { marksOfStudent } = req.body;
 
-  const { marksBySubject } = await marksBySubjectService.updateMarksOfStudent(
-    subjectId,
-    { marksOfStudent },
-  );
+  await marksBySubjectService.updateMarksOfStudent(subjectId, {
+    marksOfStudent,
+  });
 
   res.send({
     status: 'success',
-    body: { marksBySubject },
   });
 });
