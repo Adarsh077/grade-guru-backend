@@ -5,3 +5,4 @@ exports.departmentDataLayer = require('./department.data');
 exports.semesterDataLayer = require('./semester.data');
 exports.subjectDataLayer = require('./subject.data');
 exports.studentsBySemesterDataLayer = require('./students-by-semester.data');
+exports.marksBySubjectDataLayer = require('./marks-by-subject.data');

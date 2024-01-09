@@ -17,7 +17,7 @@ const ExamSchema = mongoose.Schema({
   },
 });
 
-const MarksOfExamsByStudent = mongoose.Schema({
+const MarksOfStudentByExam = mongoose.Schema({
   examName: {
     type: String,
     enum: Object.keys(ExamNamesEnum),
@@ -29,13 +29,13 @@ const MarksOfExamsByStudent = mongoose.Schema({
   },
 });
 
-const ExamsByStudent = mongoose.Schema({
+const MarksOfStudent = mongoose.Schema({
+  // students-by-semesters.students
   student: {
     type: mongoose.Types.ObjectId,
-    ref: 'students-by-semesters',
   },
-  marksOfExamsByStudent: {
-    type: [MarksOfExamsByStudent],
+  marksOfStudentByExam: {
+    type: [MarksOfStudentByExam],
     default: [],
   },
 });
@@ -50,8 +50,8 @@ const MarksBySubjectSchema = mongoose.Schema(
       type: [ExamSchema],
       default: [],
     },
-    examsByStudents: {
-      type: [ExamsByStudent],
+    marksOfStudents: {
+      type: [MarksOfStudent],
       default: [],
     },
   },

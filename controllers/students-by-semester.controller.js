@@ -1,4 +1,8 @@
-const { studentsBySemesterService } = require('../services');
+const {
+  studentsBySemesterService,
+  subjectService,
+  marksBySubjectService,
+} = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.findOneBySemesterId = catchAsync(async (req, res) => {
@@ -22,6 +26,27 @@ exports.addStudents = catchAsync(async (req, res) => {
     { semesterId },
     { students },
   );
+
+  subjectService.findAll({ semesterId }).then(({ subjects }) => {
+    subjects.forEach(async (subject) => {
+      const { marksBySubject } = await marksBySubjectService.addStudents(
+        subject._id,
+        {
+          students: studentsBySemester.map((student) => student._id),
+        },
+      );
+      studentsBySemester.forEach((student) => {
+        marksBySubjectService.updateMarksOfStudent(subject._id, {
+          marksOfStudent: {
+            student: student._id,
+            marksOfStudentByExam: marksBySubject.exams.map((exam) => ({
+              examName: exam.name,
+            })),
+          },
+        });
+      });
+    });
+  });
 
   res.send({
     status: 'success',

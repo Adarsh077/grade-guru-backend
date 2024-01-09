@@ -6,3 +6,4 @@ exports.departmentController = require('./department.controller');
 exports.semesterController = require('./semester.controller');
 exports.subjectController = require('./subject.controller');
 exports.studentsBySemesterController = require('./students-by-semester.controller');
+exports.marksBySubjectController = require('./marks-by-subject.controller');
