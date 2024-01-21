@@ -7,12 +7,13 @@ const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
-  const { name, staffId } = req.body;
+  const { name, staffId, code } = req.body;
 
   const { subject } = await subjectService.create({
     name,
     semesterId,
     staffId,
+    code,
   });
 
   res.send({

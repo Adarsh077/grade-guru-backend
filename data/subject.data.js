@@ -3,12 +3,13 @@ const { SubjectModel } = require('../models');
 
 class SubjectDataLayer {
   async create(data) {
-    const { name, semesterId, staffId } = data;
+    const { name, semesterId, staffId, code } = data;
 
     const subject = await SubjectModel.create({
       name,
       semester: semesterId,
       staff: staffId,
+      code,
     });
 
     return { subject };

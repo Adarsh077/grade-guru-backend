@@ -7,6 +7,7 @@ exports.create = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     staffId: Joi.string().required(),
+    code: Joi.string().required(),
   }),
 });
 

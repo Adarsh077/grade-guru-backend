@@ -6,12 +6,13 @@ const studentsBySemesterService = require('./students-by-semester.service');
 
 class SubjectService {
   async create(data) {
-    const { name, semesterId, staffId } = data;
+    const { name, semesterId, staffId, code } = data;
 
     const { subject } = await subjectDataLayer.create({
       name,
       semesterId,
       staffId,
+      code,
     });
 
     marksBySubjectService.updateExamsBySubjectId(subject._id, {
