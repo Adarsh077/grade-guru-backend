@@ -8,6 +8,7 @@ exports.create = celebrate({
     name: Joi.string().required(),
     staffId: Joi.string().required(),
     code: Joi.string().required(),
+    exams: Joi.string().valid('ESE', 'PROR').required(),
   }),
 });
 

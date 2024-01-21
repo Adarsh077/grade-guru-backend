@@ -6,7 +6,7 @@ const studentsBySemesterService = require('./students-by-semester.service');
 
 class SubjectService {
   async create(data) {
-    const { name, semesterId, staffId, code } = data;
+    const { name, semesterId, staffId, code, exams } = data;
 
     const { subject } = await subjectDataLayer.create({
       name,
@@ -15,13 +15,42 @@ class SubjectService {
       code,
     });
 
-    marksBySubjectService.updateExamsBySubjectId(subject._id, {
-      exams: [
-        { name: ExamNamesEnum.IAT1, maxMarksRequired: 20, minMarksRequired: 8 },
-        { name: ExamNamesEnum.IAT2, maxMarksRequired: 20, minMarksRequired: 8 },
-        { name: ExamNamesEnum.ESE, maxMarksRequired: 80, minMarksRequired: 32 },
-      ],
-    });
+    if (exams === 'ESE') {
+      marksBySubjectService.updateExamsBySubjectId(subject._id, {
+        exams: [
+          {
+            name: ExamNamesEnum.IAT1,
+            maxMarksRequired: 20,
+            minMarksRequired: 8,
+          },
+          {
+            name: ExamNamesEnum.IAT2,
+            maxMarksRequired: 20,
+            minMarksRequired: 8,
+          },
+          {
+            name: ExamNamesEnum.ESE,
+            maxMarksRequired: 80,
+            minMarksRequired: 32,
+          },
+        ],
+      });
+    } else if (exams === 'PROR') {
+      marksBySubjectService.updateExamsBySubjectId(subject._id, {
+        exams: [
+          {
+            name: ExamNamesEnum.PROR,
+            maxMarksRequired: 25,
+            minMarksRequired: 10,
+          },
+          {
+            name: ExamNamesEnum.TW,
+            maxMarksRequired: 25,
+            minMarksRequired: 10,
+          },
+        ],
+      });
+    }
 
     const { studentsBySemester } = await studentsBySemesterService.findOneBy({
       semesterId,
