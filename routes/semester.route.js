@@ -37,4 +37,8 @@ router
     studentsBySemesterController.updateBySemesterId,
   );
 
+router
+  .route('/:semesterId/result/generate')
+  .post(semesterValidator.generateResult, semesterController.generateResult);
+
 module.exports = router;

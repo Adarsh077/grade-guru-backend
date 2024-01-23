@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { MarksBySubjectModel } = require('../models');
 
 class MarksBySubjectDataLayer {
@@ -7,6 +8,22 @@ class MarksBySubjectDataLayer {
     });
 
     return { marksBySubject };
+  }
+
+  async findAllBy({ subjectIds }) {
+    subjectIds = subjectIds.map(
+      (subjectId) => new mongoose.Types.ObjectId(`${subjectId}`),
+    );
+
+    const marksBySubjects = await MarksBySubjectModel.find({
+      subject: { $in: subjectIds },
+    });
+
+    return {
+      marksBySubjects: marksBySubjects.map((marksBySubject) =>
+        marksBySubject.toJSON(),
+      ),
+    };
   }
 
   async updateExamsBySubjectId(subjectId, { exams }) {

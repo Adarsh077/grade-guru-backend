@@ -75,3 +75,14 @@ exports.updateById = catchAsync(async (req, res) => {
     },
   });
 });
+
+exports.generateResult = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+  console.log({ semesterId });
+
+  await semesterService.generateResult(semesterId);
+
+  res.send({
+    status: 'success',
+  });
+});
