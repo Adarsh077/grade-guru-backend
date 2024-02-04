@@ -10,4 +10,9 @@ const ExamNamesEnum = {
   TOT: 'TOT',
 };
 
-module.exports = { ExamNamesEnum };
+const SubjectTypeEnum = {
+  WRITTEN: 'WRITTEN',
+  LAB: 'LAB',
+};
+
+module.exports = { ExamNamesEnum, SubjectTypeEnum };

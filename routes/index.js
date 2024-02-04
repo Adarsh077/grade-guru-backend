@@ -11,6 +11,14 @@ router.get('/semesters/:semesterId/result', resultController.findOne);
 router.use(authMiddleware);
 router.use(CaslMiddleware.attachUserAbility);
 
+router.use(
+  '/master/departments',
+  require('./master-list/master-department.route'),
+);
+
+router.use('/master/semesters', require('./master-list/master-semester.route'));
+router.use('/master/subjects', require('./master-list/master-subject.route'));
+
 router.use('/user', require('./user.route'));
 router.use('/batches', require('./batch.route'));
 router.use('/departments', require('./department.route'));
