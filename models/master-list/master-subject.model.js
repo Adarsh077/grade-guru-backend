@@ -26,7 +26,8 @@ const MasterSubjectSchema = mongoose.Schema(
       required: true,
     },
     subjectType: {
-      type: Object.values(SubjectTypeEnum),
+      type: String,
+      enum: Object.values(SubjectTypeEnum),
       default: SubjectTypeEnum.WRITTEN,
     },
     isDeleted: {
