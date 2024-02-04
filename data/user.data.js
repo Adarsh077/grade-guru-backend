@@ -15,7 +15,7 @@ class UserDataLayer {
         { email: new RegExp(query, 'i') },
         { name: new RegExp(query, 'i') },
       ],
-    });
+    }).select('-password');
 
     return { users };
   }
@@ -27,12 +27,12 @@ class UserDataLayer {
   }
 
   async findAll() {
-    const users = await UserModel.find();
+    const users = await UserModel.find().select('-password');
     return { users };
   }
 
   async findById(userId) {
-    const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(userId).select('-password');
 
     return { user };
   }
