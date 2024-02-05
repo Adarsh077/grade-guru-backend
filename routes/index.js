@@ -24,5 +24,6 @@ router.use('/batches', require('./batch.route'));
 router.use('/departments', require('./department.route'));
 router.use('/semesters', require('./semester.route'));
 router.use('/subjects', require('./subject.route'));
+router.use('/students', require('./student.route'));
 
 module.exports = router;

@@ -15,4 +15,9 @@ const SubjectTypeEnum = {
   LAB: 'LAB',
 };
 
-module.exports = { ExamNamesEnum, SubjectTypeEnum };
+const StudentTypeEnum = {
+  REGULAR: 'REGULAR',
+  DSE: 'DSE',
+};
+
+module.exports = { ExamNamesEnum, SubjectTypeEnum, StudentTypeEnum };
