@@ -2,9 +2,9 @@ const { BatchModel } = require('../models');
 
 class BatchDataLayer {
   async create(data) {
-    const { name } = data;
+    const { name, year } = data;
 
-    const batch = await BatchModel.create({ name });
+    const batch = await BatchModel.create({ name, year });
 
     return { batch };
   }

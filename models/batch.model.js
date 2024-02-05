@@ -11,6 +11,11 @@ const BatchSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    year: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,

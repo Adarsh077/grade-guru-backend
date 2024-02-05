@@ -2,10 +2,11 @@ const { batchDataLayer } = require('../data');
 
 class BatchService {
   async create(data) {
-    const { name } = data;
+    const { name, year } = data;
 
     const { batch } = await batchDataLayer.create({
       name,
+      year,
     });
 
     return { batch };

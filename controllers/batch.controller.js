@@ -2,10 +2,11 @@ const { batchService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { name } = req.body;
+  const { name, year } = req.body;
 
   const { batch } = await batchService.create({
     name,
+    year,
   });
 
   res.send({
