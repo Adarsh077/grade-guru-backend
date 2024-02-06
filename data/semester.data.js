@@ -3,10 +3,11 @@ const { SemesterModel } = require('../models');
 
 class SemesterDataLayer {
   async create(data) {
-    const { name, departmentId } = data;
+    const { name, number, departmentId } = data;
 
     const semester = await SemesterModel.create({
       name,
+      number,
       department: departmentId,
     });
 

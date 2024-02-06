@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { ExamNamesEnum } = require('../enums');
 
-const ExamSchema = mongoose.Schema({
+const ExamSchema = new mongoose.Schema({
   name: {
     type: String,
     enum: Object.keys(ExamNamesEnum),
@@ -17,7 +17,7 @@ const ExamSchema = mongoose.Schema({
   },
 });
 
-const MarksOfStudentByExam = mongoose.Schema({
+const MarksOfStudentByExam = new mongoose.Schema({
   examName: {
     type: String,
     enum: Object.keys(ExamNamesEnum),
@@ -29,7 +29,7 @@ const MarksOfStudentByExam = mongoose.Schema({
   },
 });
 
-const MarksOfStudent = mongoose.Schema({
+const MarksOfStudent = new mongoose.Schema({
   // students-by-semesters.students
   student: {
     type: mongoose.Types.ObjectId,
@@ -40,7 +40,7 @@ const MarksOfStudent = mongoose.Schema({
   },
 });
 
-const MarksBySubjectSchema = mongoose.Schema(
+const MarksBySubjectSchema = new mongoose.Schema(
   {
     subject: {
       type: mongoose.Types.ObjectId,

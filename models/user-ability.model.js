@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UserAbilitySchema = mongoose.Schema(
+const UserAbilitySchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Types.ObjectId,

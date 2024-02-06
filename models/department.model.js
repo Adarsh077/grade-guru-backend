@@ -4,7 +4,7 @@ const {
   accessibleFieldsPlugin,
 } = require('@casl/mongoose');
 
-const DepartmentSchema = mongoose.Schema(
+const DepartmentSchema = new mongoose.Schema(
   {
     name: {
       type: String,

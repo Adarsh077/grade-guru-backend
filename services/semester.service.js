@@ -8,9 +8,14 @@ const {
   studentsBySemesterDataLayer,
   resultDataLayer,
 } = require('../data');
+const {
+  masterSemesterDataLayer,
+  masterSubjectDataLayer,
+} = require('../data/master-list');
 const { ExamNamesEnum } = require('../enums');
 const { AppError, marksUtils } = require('../utils');
 const marksBySubjectService = require('./marks-by-subject.service');
+const subjectService = require('./subject.service');
 
 class SemesterService {
   async create(data) {
@@ -20,6 +25,32 @@ class SemesterService {
       name,
       departmentId,
     });
+
+    return { semester };
+  }
+
+  async createSemesterFromMasterSemester(data) {
+    const { masterSemesterId, departmentId } = data;
+
+    const { semester: masterSemester } =
+      await masterSemesterDataLayer.findById(masterSemesterId);
+
+    const { semester } = await semesterDataLayer.create({
+      name: masterSemester.name,
+      departmentId: departmentId,
+      number: masterSemester.number,
+    });
+
+    const { subjects: masterSubjects } = await masterSubjectDataLayer.findAll({
+      semesterId: masterSemester._id,
+    });
+
+    for (const masterSubject of masterSubjects) {
+      await subjectService.createSubjectFromMasterSubject({
+        masterSubjectId: masterSubject._id,
+        semesterId: semester._id,
+      });
+    }
 
     return { semester };
   }

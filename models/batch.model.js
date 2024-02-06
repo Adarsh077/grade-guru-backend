@@ -4,7 +4,7 @@ const {
   accessibleFieldsPlugin,
 } = require('@casl/mongoose');
 
-const BatchSchema = mongoose.Schema(
+const BatchSchema = new mongoose.Schema(
   {
     name: {
       type: String,

@@ -1,4 +1,5 @@
 const { subjectDataLayer } = require('../data');
+const { masterSubjectDataLayer } = require('../data/master-list');
 const marksBySubjectService = require('./marks-by-subject.service');
 const { AppError } = require('../utils');
 const { ExamNamesEnum } = require('../enums');
@@ -70,6 +71,20 @@ class SubjectService {
           })),
         },
       });
+    });
+
+    return { subject };
+  }
+
+  async createSubjectFromMasterSubject({ masterSubjectId, semesterId }) {
+    const { subject: masterSubject } =
+      await masterSubjectDataLayer.findById(masterSubjectId);
+
+    const { subject } = await subjectDataLayer.create({
+      name: masterSubject.name,
+      semesterId,
+      staffId: masterSubject.staff,
+      code: masterSubject.code,
     });
 
     return { subject };

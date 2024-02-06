@@ -5,7 +5,7 @@ const {
 } = require('@casl/mongoose');
 const { SubjectTypeEnum } = require('../../enums');
 
-const MasterSubjectSchema = mongoose.Schema(
+const MasterSubjectSchema = new mongoose.Schema(
   {
     name: {
       type: String,
