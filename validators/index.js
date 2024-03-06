@@ -7,3 +7,5 @@ exports.subjectValidator = require('./subject.validator');
 exports.studentsBySemesterValidator = require('./students-by-semester.validator');
 exports.marksBySubjectValidator = require('./marks-by-subject.validator');
 exports.studentValidator = require('./student.validator');
+exports.studentValidator = require('./student.validator');
+exports.subjectGroupValidator = require('./subject-group.validator');

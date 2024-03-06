@@ -9,3 +9,4 @@ exports.studentsBySemesterController = require('./students-by-semester.controlle
 exports.marksBySubjectController = require('./marks-by-subject.controller');
 exports.resultController = require('./result.controller');
 exports.studentController = require('./students.controller');
+exports.subjectGroupController = require('./subject-group.controller');
