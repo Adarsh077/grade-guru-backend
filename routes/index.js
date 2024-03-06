@@ -17,6 +17,10 @@ router.use(
 );
 
 router.use('/master/semesters', require('./master-list/master-semester.route'));
+router.use(
+  '/master/subject-groups',
+  require('./master-list/master-student-group.route'),
+);
 router.use('/master/subjects', require('./master-list/master-subject.route'));
 
 router.use('/user', require('./user.route'));

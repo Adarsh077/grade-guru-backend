@@ -2,11 +2,11 @@ const router = require('express').Router();
 
 const {
   masterSemesterController,
-  masterSubjectController,
+  masterSubjectGroupController,
 } = require('../../controllers/master-list');
 const {
   masterSemesterValidator,
-  masterSubjectValidator,
+  masterSubjectGroupValidator,
 } = require('../../validators/master-list');
 
 router
@@ -22,8 +22,11 @@ router
   );
 
 router
-  .route('/:semesterId/subjects')
-  .post(masterSubjectValidator.create, masterSubjectController.create)
-  .get(masterSubjectValidator.findAll, masterSubjectController.findAll);
+  .route('/:semesterId/subjects-groups')
+  .post(masterSubjectGroupValidator.create, masterSubjectGroupController.create)
+  .get(
+    masterSubjectGroupValidator.findAll,
+    masterSubjectGroupController.findAll,
+  );
 
 module.exports = router;

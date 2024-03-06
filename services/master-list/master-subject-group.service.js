@@ -1,55 +1,53 @@
-const { masterSubjectDataLayer } = require('../../data/master-list');
+const { masterSubjectGroupDataLayer } = require('../../data/master-list');
 const { AppError } = require('../../utils');
 
 class MasterSubjectService {
   async create(data) {
-    const { name, semesterId, staffId, code, subjectType } = data;
+    const { name, semesterId } = data;
 
-    const { subject } = await masterSubjectDataLayer.create({
+    const { subjectGroup } = await masterSubjectGroupDataLayer.create({
       name,
       semesterId,
-      staffId,
-      code,
-      subjectType,
     });
 
-    return { subject };
+    return { subjectGroup };
   }
 
-  async findAll({ semesterId, staffId, semesterIds }) {
-    const { subjects } = await masterSubjectDataLayer.findAll({
+  async findAll({ semesterId, semesterIds }) {
+    const { subjectGroups } = await masterSubjectGroupDataLayer.findAll({
       semesterId,
-      staffId,
       semesterIds,
     });
-    return { subjects };
+    return { subjectGroups };
   }
 
-  async findById(subjectId) {
-    const { subject } = await masterSubjectDataLayer.findById(subjectId);
+  async findById(subjectGroupId) {
+    const { subjectGroup } =
+      await masterSubjectGroupDataLayer.findById(subjectGroupId);
 
-    if (!subject) {
-      throw new AppError({ message: 'Subject not found!' }, 404);
+    if (!subjectGroup) {
+      throw new AppError({ message: 'Subject Group not found!' }, 404);
     }
 
-    return { subject };
+    return { subjectGroup };
   }
 
-  async updateById(subjectId, { name, staffId, code, subjectType }) {
-    const { subject } = await masterSubjectDataLayer.updateById(subjectId, {
-      name,
-      staffId,
-      code,
-      subjectType,
-    });
+  async updateById(subjectGroupId, { name }) {
+    const { subjectGroup } = await masterSubjectGroupDataLayer.updateById(
+      subjectGroupId,
+      {
+        name,
+      },
+    );
 
-    return { subject };
+    return { subjectGroup };
   }
 
-  async deleteById(subjectId) {
-    const { subject } = await masterSubjectDataLayer.deleteById(subjectId);
+  async deleteById(subjectGroupId) {
+    const { subjectGroup } =
+      await masterSubjectGroupDataLayer.deleteById(subjectGroupId);
 
-    return { subject };
+    return { subjectGroup };
   }
 }
 
