@@ -3,6 +3,7 @@ const {
   accessibleRecordsPlugin,
   accessibleFieldsPlugin,
 } = require('@casl/mongoose');
+const { SubjectTypeEnum } = require('../enums');
 
 const SubjectSchema = new mongoose.Schema(
   {
@@ -14,15 +15,20 @@ const SubjectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    semester: {
+    subjectGroup: {
       type: mongoose.Types.ObjectId,
-      ref: 'departments',
+      ref: 'subject-groups',
       required: true,
     },
     staff: {
       type: mongoose.Types.ObjectId,
       ref: 'users',
       required: true,
+    },
+    subjectType: {
+      type: String,
+      enum: Object.values(SubjectTypeEnum),
+      default: SubjectTypeEnum.WRITTEN,
     },
     isDeleted: {
       type: Boolean,

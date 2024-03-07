@@ -1,81 +1,22 @@
 const { subjectDataLayer } = require('../data');
 const { masterSubjectDataLayer } = require('../data/master-list');
-const marksBySubjectService = require('./marks-by-subject.service');
 const { AppError } = require('../utils');
-const { ExamNamesEnum } = require('../enums');
-const studentsBySemesterService = require('./students-by-semester.service');
 
 class SubjectService {
   async create(data) {
-    const { name, semesterId, staffId, code, exams } = data;
+    const { name, subjectGroupId, staffId, code } = data;
 
     const { subject } = await subjectDataLayer.create({
       name,
-      semesterId,
+      subjectGroupId,
       staffId,
       code,
-    });
-
-    if (exams === 'ESE') {
-      marksBySubjectService.updateExamsBySubjectId(subject._id, {
-        exams: [
-          {
-            name: ExamNamesEnum.IAT1,
-            maxMarksRequired: 20,
-            minMarksRequired: 8,
-          },
-          {
-            name: ExamNamesEnum.IAT2,
-            maxMarksRequired: 20,
-            minMarksRequired: 8,
-          },
-          {
-            name: ExamNamesEnum.ESE,
-            maxMarksRequired: 80,
-            minMarksRequired: 32,
-          },
-        ],
-      });
-    } else if (exams === 'PROR') {
-      marksBySubjectService.updateExamsBySubjectId(subject._id, {
-        exams: [
-          {
-            name: ExamNamesEnum.PROR,
-            maxMarksRequired: 25,
-            minMarksRequired: 10,
-          },
-          {
-            name: ExamNamesEnum.TW,
-            maxMarksRequired: 25,
-            minMarksRequired: 10,
-          },
-        ],
-      });
-    }
-
-    const { studentsBySemester } = await studentsBySemesterService.findOneBy({
-      semesterId,
-    });
-
-    const { marksBySubject } = await marksBySubjectService.addStudents(
-      subject._id,
-      { students: studentsBySemester.map((student) => student._id) },
-    );
-
-    studentsBySemester.forEach((student) => {
-      marksBySubjectService.updateMarksOfStudent(subject._id, {
-        marksOfStudent: {
-          student: student._id,
-          marksOfStudentByExam: marksBySubject.exams.map((exam) => ({
-            examName: exam.name,
-          })),
-        },
-      });
     });
 
     return { subject };
   }
 
+  // TODO: Update master list services
   async createSubjectFromMasterSubject({ masterSubjectId, semesterId }) {
     const { subject: masterSubject } =
       await masterSubjectDataLayer.findById(masterSubjectId);
@@ -90,11 +31,11 @@ class SubjectService {
     return { subject };
   }
 
-  async findAll({ semesterId, staffId, semesterIds }) {
+  async findAll({ subjectGroupId, staffId, subjectGroupIds }) {
     const { subjects } = await subjectDataLayer.findAll({
-      semesterId,
+      subjectGroupId,
       staffId,
-      semesterIds,
+      subjectGroupIds,
     });
     return { subjects };
   }

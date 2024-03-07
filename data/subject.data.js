@@ -3,36 +3,42 @@ const { SubjectModel } = require('../models');
 
 class SubjectDataLayer {
   async create(data) {
-    const { name, semesterId, staffId, code } = data;
+    const { name, subjectGroupId, staffId, code, subjectType } = data;
 
     const subject = await SubjectModel.create({
       name,
-      semester: semesterId,
+      subjectGroup: subjectGroupId,
       staff: staffId,
       code,
+      subjectType,
     });
 
     return { subject };
   }
 
-  async findAll({ semesterId, staffId, semesterIds }) {
+  async findAll({ subjectGroupId, staffId, subjectGroupIds }) {
     const filter = {
       isDeleted: false,
     };
 
-    if (semesterId) {
-      filter.semester = semesterId;
+    if (subjectGroupId) {
+      filter.subjectGroup = subjectGroupId;
     }
 
-    if (semesterIds && Array.isArray(semesterIds) && semesterIds.length) {
-      filter.semester = {
-        $in: semesterIds.map((id) => new mongoose.Types.ObjectId(id)),
+    if (
+      subjectGroupIds &&
+      Array.isArray(subjectGroupIds) &&
+      subjectGroupIds.length
+    ) {
+      filter.subjectGroup = {
+        $in: subjectGroupIds.map((id) => new mongoose.Types.ObjectId(id)),
       };
     }
 
     if (staffId) {
       filter.staff = staffId;
     }
+    console.log(filter);
 
     const subjects = await SubjectModel.find(filter).populate(
       'staff',
@@ -52,7 +58,7 @@ class SubjectDataLayer {
     return { subject };
   }
 
-  async updateById(subjectId, { name, staffId }) {
+  async updateById(subjectId, { name, staffId, subjectType }) {
     const updateData = {};
     if (name) {
       updateData.name = name;
@@ -60,6 +66,10 @@ class SubjectDataLayer {
 
     if (staffId) {
       updateData.staff = staffId;
+    }
+
+    if (subjectType) {
+      updateData.subjectType = subjectType;
     }
 
     const subject = await SubjectModel.findOneAndUpdate(

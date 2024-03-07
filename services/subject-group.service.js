@@ -1,7 +1,7 @@
 const { subjectGroupDataLayer } = require('../data');
 const { AppError } = require('../utils');
 
-class SubjectService {
+class SubjectGroupService {
   async create(data) {
     const { name, semesterId } = data;
 
@@ -51,4 +51,4 @@ class SubjectService {
   }
 }
 
-module.exports = new SubjectService();
+module.exports = new SubjectGroupService();

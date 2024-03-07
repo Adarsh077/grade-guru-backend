@@ -1,20 +1,23 @@
+const { SubjectTypeEnum } = require('../enums');
 const { celebrate, Joi, Segments } = require('../utils/celebrate');
 
 exports.create = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    semesterId: Joi.string().required(),
+    subjectGroupId: Joi.string().required(),
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     staffId: Joi.string().required(),
     code: Joi.string().required(),
-    exams: Joi.string().valid('ESE', 'PROR').required(),
+    subjectType: Joi.string()
+      .valid(...Object.values(SubjectTypeEnum))
+      .required(),
   }),
 });
 
 exports.findAll = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    semesterId: Joi.string().required(),
+    subjectGroupId: Joi.string().required(),
   }),
 });
 

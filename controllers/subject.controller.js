@@ -2,16 +2,17 @@ const {
   subjectService,
   departmentService,
   semesterService,
+  subjectGroupService,
 } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { subjectGroupId } = req.params;
   const { name, staffId, code, exams } = req.body;
 
   const { subject } = await subjectService.create({
     name,
-    semesterId,
+    subjectGroupId,
     staffId,
     code,
     exams,
@@ -26,10 +27,10 @@ exports.create = catchAsync(async (req, res) => {
 });
 
 exports.findAll = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { subjectGroupId } = req.params;
 
   const { subjects } = await subjectService.findAll({
-    semesterId,
+    subjectGroupId,
   });
 
   res.send({
@@ -69,9 +70,22 @@ exports.findMySubjects = catchAsync(async (req, res) => {
     });
   }
 
+  const { subjectGroups } = await subjectGroupService.findAll({
+    semesterIds: semesters.map((semester) => semester._id),
+  });
+
+  if (!subjectGroups || !subjectGroups.length) {
+    return res.send({
+      status: 'success',
+      body: {
+        subjects: [],
+      },
+    });
+  }
+
   const { subjects } = await subjectService.findAll({
     staffId: req.user._id,
-    semesterIds: semesters.map((semester) => semester._id),
+    subjectGroupIds: subjectGroups.map((subjectGroup) => subjectGroup._id),
   });
 
   res.send({
