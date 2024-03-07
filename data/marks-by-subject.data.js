@@ -54,10 +54,10 @@ class MarksBySubjectDataLayer {
     const { subjectId } = data;
 
     const marksBySubject = await MarksBySubjectModel.findOne({
-      subject: mongoose.Types.ObjectId(subjectId),
-    });
+      subject: new mongoose.Types.ObjectId(subjectId),
+    }).populate('marks.student', 'name');
 
-    return marksBySubject;
+    return { marksBySubject };
   }
 }
 

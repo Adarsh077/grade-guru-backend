@@ -5,7 +5,7 @@ exports.enterMarksFor = catchAsync(async (req, res) => {
   const { subjectId, studentId } = req.params;
   const { examName, marksScored } = req.body;
 
-  const { marksBySubject } = await marksBySubjectService.enterMarksFor({
+  await marksBySubjectService.enterMarksFor({
     subjectId,
     studentId,
     examName,
@@ -14,7 +14,6 @@ exports.enterMarksFor = catchAsync(async (req, res) => {
 
   res.send({
     status: 'success',
-    body: { marksBySubject },
   });
 });
 

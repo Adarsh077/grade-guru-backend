@@ -15,9 +15,23 @@ const SubjectTypeEnum = {
   LAB: 'LAB',
 };
 
+const ExamsBySubjectType = {
+  [SubjectTypeEnum.WRITTEN]: [
+    ExamNamesEnum.IAT1,
+    ExamNamesEnum.IAT2,
+    ExamNamesEnum.ESE,
+  ],
+  [SubjectTypeEnum.LAB]: [ExamNamesEnum.PROR, ExamNamesEnum.TW],
+};
+
 const StudentTypeEnum = {
   REGULAR: 'REGULAR',
   DSE: 'DSE',
 };
 
-module.exports = { ExamNamesEnum, SubjectTypeEnum, StudentTypeEnum };
+module.exports = {
+  ExamNamesEnum,
+  SubjectTypeEnum,
+  StudentTypeEnum,
+  ExamsBySubjectType,
+};
