@@ -38,7 +38,6 @@ class SubjectDataLayer {
     if (staffId) {
       filter.staff = staffId;
     }
-    console.log(filter);
 
     const subjects = await SubjectModel.find(filter).populate(
       'staff',

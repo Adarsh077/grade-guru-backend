@@ -2,7 +2,7 @@ const ExamNamesEnum = {
   ESE: 'ESE',
   IAT1: 'IAT1',
   IAT2: 'IAT2',
-  PROR: 'PR OR',
+  PROR: 'PR_OR',
   TW: 'TW',
 
   // NOTE: used internally for result pdf generation

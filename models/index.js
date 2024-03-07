@@ -6,3 +6,4 @@ exports.SemesterModel = require('./semester.model');
 exports.SubjectModel = require('./subject.model');
 exports.SubjectGroupModel = require('./subject-group.model');
 exports.StudentsModel = require('./student.model');
+exports.MarksBySubjectModel = require('./marks-by-subjects.model');
