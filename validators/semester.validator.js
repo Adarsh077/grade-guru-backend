@@ -36,9 +36,3 @@ exports.updateById = celebrate({
     departmentId: Joi.string(),
   }),
 });
-
-exports.generateResult = celebrate({
-  [Segments.PARAMS]: Joi.object().keys({
-    semesterId: Joi.string().required(),
-  }),
-});
