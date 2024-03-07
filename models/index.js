@@ -5,3 +5,4 @@ exports.DepartmentModel = require('./department.model');
 exports.SemesterModel = require('./semester.model');
 exports.SubjectModel = require('./subject.model');
 exports.SubjectGroupModel = require('./subject-group.model');
+exports.StudentsModel = require('./student.model');
