@@ -3,11 +3,11 @@ const { MasterListSubjectModel } = require('../../models/master-list');
 
 class MasterSubjectDataLayer {
   async create(data) {
-    const { name, semesterId, staffId, code, subjectType } = data;
+    const { name, subjectGroupId, staffId, code, subjectType } = data;
 
     const subject = await MasterListSubjectModel.create({
       name,
-      semester: semesterId,
+      subjectGroup: subjectGroupId,
       staff: staffId,
       code,
       subjectType,
@@ -16,18 +16,22 @@ class MasterSubjectDataLayer {
     return { subject };
   }
 
-  async findAll({ semesterId, staffId, semesterIds }) {
+  async findAll({ subjectGroupId, staffId, subjectGroupIds }) {
     const filter = {
       isDeleted: false,
     };
 
-    if (semesterId) {
-      filter.semester = semesterId;
+    if (subjectGroupId) {
+      filter.subjectGroup = subjectGroupId;
     }
 
-    if (semesterIds && Array.isArray(semesterIds) && semesterIds.length) {
-      filter.semester = {
-        $in: semesterIds.map((id) => new mongoose.Types.ObjectId(id)),
+    if (
+      subjectGroupIds &&
+      Array.isArray(subjectGroupIds) &&
+      subjectGroupIds.length
+    ) {
+      filter.subjectGroup = {
+        $in: subjectGroupIds.map((id) => new mongoose.Types.ObjectId(id)),
       };
     }
 

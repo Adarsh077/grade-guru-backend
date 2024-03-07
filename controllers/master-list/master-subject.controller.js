@@ -2,15 +2,15 @@ const { masterSubjectService } = require('../../services/master-list');
 const { catchAsync } = require('../../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { subjectGroupId } = req.params;
   const { name, staffId, code, subjectType } = req.body;
 
   const { subject } = await masterSubjectService.create({
     name,
-    semesterId,
     staffId,
     code,
     subjectType,
+    subjectGroupId,
   });
 
   res.send({
@@ -22,10 +22,10 @@ exports.create = catchAsync(async (req, res) => {
 });
 
 exports.findAll = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
+  const { subjectGroupId } = req.params;
 
   const { subjects } = await masterSubjectService.findAll({
-    semesterId,
+    subjectGroupId,
   });
 
   res.send({

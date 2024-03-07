@@ -3,11 +3,11 @@ const { AppError } = require('../../utils');
 
 class MasterSubjectService {
   async create(data) {
-    const { name, semesterId, staffId, code, subjectType } = data;
+    const { name, subjectGroupId, staffId, code, subjectType } = data;
 
     const { subject } = await masterSubjectDataLayer.create({
       name,
-      semesterId,
+      subjectGroupId,
       staffId,
       code,
       subjectType,
@@ -16,11 +16,11 @@ class MasterSubjectService {
     return { subject };
   }
 
-  async findAll({ semesterId, staffId, semesterIds }) {
+  async findAll({ subjectGroupId, staffId, subjectGroupIds }) {
     const { subjects } = await masterSubjectDataLayer.findAll({
-      semesterId,
+      subjectGroupId,
       staffId,
-      semesterIds,
+      subjectGroupIds,
     });
     return { subjects };
   }

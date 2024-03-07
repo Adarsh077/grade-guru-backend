@@ -15,9 +15,9 @@ const MasterSubjectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    semester: {
+    subjectGroup: {
       type: mongoose.Types.ObjectId,
-      ref: 'master-semesters',
+      ref: 'master-subject-groups',
       required: true,
     },
     staff: {
