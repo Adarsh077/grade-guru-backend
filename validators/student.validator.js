@@ -22,6 +22,7 @@ exports.delete = celebrate({
 exports.find = celebrate({
   [Segments.QUERY]: Joi.object().keys({
     admissionYear: Joi.number(),
+    departmentId: Joi.string(),
   }),
 });
 
