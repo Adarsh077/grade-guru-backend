@@ -12,6 +12,7 @@ const SemesterSchema = new mongoose.Schema(
     },
     number: {
       type: Number,
+      required: true,
     },
     department: {
       type: mongoose.Types.ObjectId,

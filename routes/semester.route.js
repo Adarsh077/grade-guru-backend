@@ -13,6 +13,13 @@ router
   .patch(semesterValidator.updateById, semesterController.updateById);
 
 router
+  .route('/:semesterId/students')
+  .get(
+    semesterValidator.findRegisteredStudents,
+    semesterController.findRegisteredStudents,
+  );
+
+router
   .route('/:semesterId/subject-groups')
   .post(subjectGroupValidator.create, subjectGroupController.create)
   .get(subjectGroupValidator.findAll, subjectGroupController.findAll);

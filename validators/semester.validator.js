@@ -6,6 +6,7 @@ exports.create = celebrate({
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
+    number: Joi.number().min(1).max(8).required(),
   }),
 });
 
@@ -34,5 +35,12 @@ exports.updateById = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string(),
     departmentId: Joi.string(),
+    number: Joi.number().min(1).max(8).required(),
+  }),
+});
+
+exports.findRegisteredStudents = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    semesterId: Joi.string().required(),
   }),
 });

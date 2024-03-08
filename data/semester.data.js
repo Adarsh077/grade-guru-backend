@@ -37,20 +37,23 @@ class SemesterDataLayer {
   async findById(semesterId) {
     const semester = await SemesterModel.findById(semesterId);
 
-    if (semester.isDeleted) {
+    if (!semester || semester.isDeleted) {
       return { semester: null };
     }
 
     return { semester };
   }
 
-  async updateById(semesterId, { name, departmentId }) {
+  async updateById(semesterId, { name, departmentId, number }) {
     const updateData = {};
     if (name) {
       updateData.name = name;
     }
     if (departmentId) {
       updateData.department = departmentId;
+    }
+    if (number) {
+      updateData.number = number;
     }
 
     const semester = await SemesterModel.findOneAndUpdate(

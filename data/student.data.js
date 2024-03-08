@@ -16,13 +16,16 @@ class StudentDataLayer {
     return { student };
   }
 
-  async find({ admissionYear, departmentId }) {
+  async find({ admissionYear, departmentId, studentType }) {
     const filter = { isDeleted: false };
     if (admissionYear) {
       filter.admissionYear = admissionYear;
     }
     if (departmentId) {
       filter.department = departmentId;
+    }
+    if (studentType) {
+      filter.studentType = studentType;
     }
 
     const students = await StudentsModel.find(filter);

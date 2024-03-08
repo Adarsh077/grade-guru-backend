@@ -3,11 +3,12 @@ const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
   const { departmentId } = req.params;
-  const { name } = req.body;
+  const { name, number } = req.body;
 
   const { semester } = await semesterService.create({
     name,
     departmentId,
+    number,
   });
 
   res.send({
@@ -61,11 +62,12 @@ exports.findById = catchAsync(async (req, res) => {
 
 exports.updateById = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
-  const { name, departmentId } = req.body;
+  const { name, departmentId, number } = req.body;
 
   const { semester } = await semesterService.updateById(semesterId, {
     name,
     departmentId,
+    number,
   });
 
   res.send({
@@ -76,13 +78,13 @@ exports.updateById = catchAsync(async (req, res) => {
   });
 });
 
-exports.generateResult = catchAsync(async (req, res) => {
+exports.findRegisteredStudents = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
-  console.log({ semesterId });
 
-  await semesterService.generateResult(semesterId);
+  const { students } = await semesterService.findRegisteredStudents(semesterId);
 
   res.send({
     status: 'success',
+    body: { students },
   });
 });
