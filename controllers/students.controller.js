@@ -2,13 +2,14 @@ const { studentService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { name, email, studentType, admissionYear } = req.body;
+  const { name, email, studentType, admissionYear, departmentId } = req.body;
 
   const { student } = await studentService.create({
     name,
     email,
     studentType,
     admissionYear,
+    departmentId,
   });
 
   res.send({
@@ -31,7 +32,9 @@ exports.delete = catchAsync(async (req, res) => {
 exports.find = catchAsync(async (req, res) => {
   const { admissionYear } = req.query;
 
-  const { students } = await studentService.find({ admissionYear });
+  const { students } = await studentService.find({
+    admissionYear,
+  });
 
   res.send({
     status: 'success',

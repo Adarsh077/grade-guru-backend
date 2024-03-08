@@ -16,6 +16,11 @@ const StudentSchema = new mongoose.Schema(
       enum: Object.values(StudentTypeEnum),
       required: true,
     },
+    department: {
+      type: mongoose.Types.ObjectId,
+      ref: 'departments',
+      required: true,
+    },
     admissionYear: {
       type: Number,
       required: true,

@@ -9,6 +9,7 @@ exports.create = celebrate({
       .valid(...Object.values(StudentTypeEnum))
       .required(),
     admissionYear: Joi.number().required(),
+    departmentId: Joi.string().required(),
   }),
 });
 

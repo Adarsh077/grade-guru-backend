@@ -3,22 +3,26 @@ const { StudentsModel } = require('../models');
 
 class StudentDataLayer {
   async create(data) {
-    const { name, email, studentType, admissionYear } = data;
+    const { name, email, studentType, admissionYear, departmentId } = data;
 
     const student = await StudentsModel.create({
       name,
       email,
       studentType,
       admissionYear,
+      department: departmentId,
     });
 
     return { student };
   }
 
-  async find({ admissionYear }) {
+  async find({ admissionYear, departmentId }) {
     const filter = { isDeleted: false };
     if (admissionYear) {
       filter.admissionYear = admissionYear;
+    }
+    if (departmentId) {
+      filter.department = departmentId;
     }
 
     const students = await StudentsModel.find(filter);
