@@ -57,7 +57,10 @@ class SubjectDataLayer {
     return { subject };
   }
 
-  async updateById(subjectId, { name, staffId, subjectType }) {
+  async updateById(
+    subjectId,
+    { name, staffId, subjectType, enrolledStudentCount },
+  ) {
     const updateData = {};
     if (name) {
       updateData.name = name;
@@ -69,6 +72,10 @@ class SubjectDataLayer {
 
     if (subjectType) {
       updateData.subjectType = subjectType;
+    }
+
+    if (enrolledStudentCount) {
+      updateData.enrolledStudentCount = enrolledStudentCount;
     }
 
     const subject = await SubjectModel.findOneAndUpdate(

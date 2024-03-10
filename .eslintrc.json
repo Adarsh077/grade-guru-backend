@@ -15,6 +15,7 @@
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
-    "no-await-in-loop": ["off"]
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off"
   }
 }

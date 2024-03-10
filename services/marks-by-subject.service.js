@@ -24,6 +24,18 @@ class SubjectService {
 
     return { marksBySubject };
   }
+
+  async createMarksEntryForEnrolledStudents(data) {
+    const { studentIds, subjectId } = data;
+
+    const { marksBySubject } =
+      await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
+        studentIds,
+        subjectId,
+      });
+
+    return { marksBySubject };
+  }
 }
 
 module.exports = new SubjectService();

@@ -2,6 +2,38 @@ const mongoose = require('mongoose');
 const { MarksBySubjectModel } = require('../models');
 
 class MarksBySubjectDataLayer {
+  async createMarksEntryForEnrolledStudents({ subjectId, studentIds }) {
+    let marksBySubject = await MarksBySubjectModel.findOne({
+      subject: new mongoose.Types.ObjectId(subjectId),
+    });
+
+    if (marksBySubject) {
+      for (const studentId of studentIds) {
+        const isAlreadEnrolled = marksBySubject.marks.find(
+          (marks) => `${marks.student}` === `${studentId}`,
+        );
+
+        if (!isAlreadEnrolled) {
+          marksBySubject.marks.push({
+            student: studentId,
+            exams: [],
+          });
+        }
+      }
+
+      await marksBySubject.save();
+
+      return { marksBySubject };
+    }
+
+    marksBySubject = await MarksBySubjectModel.create({
+      subject: subjectId,
+      marks: studentIds.map((studentId) => ({ student: studentId, exams: [] })),
+    });
+
+    return { marksBySubject };
+  }
+
   async enterMarksFor(data) {
     const { subjectId, studentId, examName, marksScored } = data;
 

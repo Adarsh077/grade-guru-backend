@@ -30,6 +30,10 @@ const SubjectSchema = new mongoose.Schema(
       enum: Object.values(SubjectTypeEnum),
       default: SubjectTypeEnum.WRITTEN,
     },
+    enrolledStudentCount: {
+      type: Number,
+      default: 0,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

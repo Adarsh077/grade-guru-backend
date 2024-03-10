@@ -1,4 +1,5 @@
-const { subjectGroupDataLayer } = require('../data');
+const { subjectGroupDataLayer, marksBySubjectDataLayer } = require('../data');
+const { subjectService } = require('./index');
 const { AppError } = require('../utils');
 
 class SubjectGroupService {
@@ -35,10 +36,36 @@ class SubjectGroupService {
   async updateById(subjectGroupId, { name }) {
     const { subjectGroup } = await subjectGroupDataLayer.updateById(
       subjectGroupId,
-      {
-        name,
-      },
+      { name },
     );
+
+    return { subjectGroup };
+  }
+
+  async enrollStudents(subjectGroupId, { enrolledStudents }) {
+    const { subjectGroup } = await subjectGroupDataLayer.updateById(
+      subjectGroupId,
+      { enrolledStudents },
+    );
+
+    if (!subjectGroup) {
+      throw new AppError({ message: 'Subject Group not found!' }, 404);
+    }
+
+    const { subjects } = await subjectService.findAll({
+      subjectGroupId: subjectGroup._id,
+    });
+
+    for (const subject of subjects) {
+      await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
+        studentIds: subjectGroup.enrolledStudents,
+        subjectId: subject._id,
+      });
+
+      await subjectService.updateById(subject._id, {
+        enrolledStudentCount: subjectGroup.enrolledStudents.length,
+      });
+    }
 
     return { subjectGroup };
   }

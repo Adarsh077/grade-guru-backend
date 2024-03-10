@@ -11,6 +11,11 @@ const SubjectGroupSchema = new mongoose.Schema(
       ref: 'semesters',
       required: true,
     },
+    enrolledStudents: {
+      type: [mongoose.Types.ObjectId],
+      ref: 'students',
+      default: [],
+    },
     isDeleted: {
       type: Boolean,
       default: false,

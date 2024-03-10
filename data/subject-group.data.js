@@ -43,10 +43,18 @@ class SubjectGroupDataLayer {
     return { subjectGroup };
   }
 
-  async updateById(subjectGroupId, { name }) {
+  async updateById(subjectGroupId, { name, enrolledStudents }) {
     const updateData = {};
     if (name) {
       updateData.name = name;
+    }
+
+    if (
+      enrolledStudents &&
+      Array.isArray(enrolledStudents) &&
+      enrolledStudents.length
+    ) {
+      updateData.enrolledStudents = enrolledStudents;
     }
 
     const subjectGroup = await SubjectGroupModel.findOneAndUpdate(

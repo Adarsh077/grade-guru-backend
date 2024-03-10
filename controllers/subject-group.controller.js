@@ -64,3 +64,18 @@ exports.updateById = catchAsync(async (req, res) => {
     body: { subjectGroup },
   });
 });
+
+exports.enrollStudents = catchAsync(async (req, res) => {
+  const { subjectGroupId } = req.params;
+  const { enrolledStudents } = req.body;
+
+  const { subjectGroup } = await subjectGroupService.enrollStudents(
+    subjectGroupId,
+    { enrolledStudents },
+  );
+
+  res.send({
+    status: 'success',
+    body: { subjectGroup },
+  });
+});

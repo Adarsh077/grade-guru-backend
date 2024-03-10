@@ -14,4 +14,11 @@ router
   .post(subjectValidator.create, subjectController.create)
   .get(subjectValidator.findAll, subjectController.findAll);
 
+router
+  .route('/:subjectGroupId/students')
+  .post(
+    subjectGroupValidator.enrollStudents,
+    subjectGroupController.enrollStudents,
+  );
+
 module.exports = router;
