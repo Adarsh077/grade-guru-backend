@@ -48,3 +48,19 @@ exports.updateById = celebrate({
     staffId: Joi.string(),
   }),
 });
+
+exports.enrollStudent = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    subjectId: Joi.string().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    studentId: Joi.string().required(),
+  }),
+});
+
+exports.unEnrollStudent = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    subjectId: Joi.string().required(),
+    studentId: Joi.string().required(),
+  }),
+});

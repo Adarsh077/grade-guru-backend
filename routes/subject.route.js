@@ -19,6 +19,14 @@ router
   .patch(subjectValidator.updateById, subjectController.updateById);
 
 router
+  .route('/:subjectId/students')
+  .post(subjectValidator.enrollStudent, subjectController.enrollStudent);
+
+router
+  .route('/:subjectId/students/:studentId')
+  .delete(subjectValidator.unEnrollStudent, subjectController.unEnrollStudent);
+
+router
   .route('/:subjectId/students/:studentId/marks')
   .post(
     marksBySubjectValidator.enterMarksFor,

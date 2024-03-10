@@ -1,4 +1,4 @@
-const { subjectDataLayer } = require('../data');
+const { subjectDataLayer, marksBySubjectDataLayer } = require('../data');
 const { masterSubjectDataLayer } = require('../data/master-list');
 const { AppError } = require('../utils');
 
@@ -63,6 +63,34 @@ class SubjectService {
     const { subject } = await subjectDataLayer.deleteById(subjectId);
 
     return { subject };
+  }
+
+  async enrollStudent(subjectId, { studentId }) {
+    const { marksBySubject } =
+      await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
+        studentIds: [studentId],
+        subjectId,
+      });
+
+    await subjectDataLayer.updateById(subjectId, {
+      enrolledStudentCount: marksBySubject.marks.length,
+    });
+
+    return { marksBySubject };
+  }
+
+  async unEnrollStudent(subjectId, { studentId }) {
+    const { marksBySubject } =
+      await marksBySubjectDataLayer.removeMarksEntryForStudent({
+        studentId,
+        subjectId,
+      });
+
+    await subjectDataLayer.updateById(subjectId, {
+      enrolledStudentCount: marksBySubject.marks.length,
+    });
+
+    return { marksBySubject };
   }
 }
 

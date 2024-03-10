@@ -34,6 +34,26 @@ class MarksBySubjectDataLayer {
     return { marksBySubject };
   }
 
+  async removeMarksEntryForStudent({ subjectId, studentId }) {
+    const marksBySubject = await MarksBySubjectModel.findOne({
+      subject: new mongoose.Types.ObjectId(subjectId),
+    });
+
+    if (marksBySubject && Array.isArray(marksBySubject.marks)) {
+      const marksOfStudentIndex = marksBySubject.marks.findIndex(
+        (marks) => `${marks.student}` === `${studentId}`,
+      );
+
+      if (marksOfStudentIndex > -1) {
+        marksBySubject.marks.splice(marksOfStudentIndex, 1);
+      }
+
+      await marksBySubject.save();
+    }
+
+    return { marksBySubject };
+  }
+
   async enterMarksFor(data) {
     const { subjectId, studentId, examName, marksScored } = data;
 

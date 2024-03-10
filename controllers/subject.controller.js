@@ -138,3 +138,30 @@ exports.updateById = catchAsync(async (req, res) => {
     },
   });
 });
+
+exports.enrollStudent = catchAsync(async (req, res) => {
+  const { subjectId } = req.params;
+  const { studentId } = req.body;
+
+  const { marksBySubject } = await subjectService.enrollStudent(subjectId, {
+    studentId,
+  });
+
+  res.send({
+    status: 'success',
+    body: { marksBySubject },
+  });
+});
+
+exports.unEnrollStudent = catchAsync(async (req, res) => {
+  const { subjectId, studentId } = req.params;
+
+  const { marksBySubject } = await subjectService.unEnrollStudent(subjectId, {
+    studentId,
+  });
+
+  res.send({
+    status: 'success',
+    body: { marksBySubject },
+  });
+});

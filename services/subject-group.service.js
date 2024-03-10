@@ -57,14 +57,17 @@ class SubjectGroupService {
     });
 
     for (const subject of subjects) {
-      await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
-        studentIds: subjectGroup.enrolledStudents,
-        subjectId: subject._id,
-      });
+      const { marksBySubject } =
+        await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
+          studentIds: subjectGroup.enrolledStudents,
+          subjectId: subject._id,
+        });
 
-      await subjectService.updateById(subject._id, {
-        enrolledStudentCount: subjectGroup.enrolledStudents.length,
-      });
+      if (marksBySubject && Array.isArray(marksBySubject.marks)) {
+        await subjectService.updateById(subject._id, {
+          enrolledStudentCount: marksBySubject.marks.length,
+        });
+      }
     }
 
     return { subjectGroup };

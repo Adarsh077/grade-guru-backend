@@ -21,9 +21,11 @@ class StudentDataLayer {
     if (admissionYear) {
       filter.admissionYear = admissionYear;
     }
+
     if (departmentId) {
       filter.department = departmentId;
     }
+
     if (studentType) {
       filter.studentType = studentType;
     }
@@ -35,9 +37,11 @@ class StudentDataLayer {
 
   async update(studentId, { name, email }) {
     const updateObject = {};
+
     if (name) {
       updateObject.name = name;
     }
+
     if (email) {
       updateObject.email = email;
     }
