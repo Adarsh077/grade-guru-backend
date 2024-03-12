@@ -22,7 +22,7 @@ router
   );
 
 router
-  .route('/:semesterId/subjects-groups')
+  .route('/:semesterId/subject-groups')
   .post(masterSubjectGroupValidator.create, masterSubjectGroupController.create)
   .get(
     masterSubjectGroupValidator.findAll,
