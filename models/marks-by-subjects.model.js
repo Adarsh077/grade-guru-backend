@@ -20,6 +20,14 @@ const MarksOfStudentSchema = new mongoose.Schema(
       ref: 'students',
       required: true,
     },
+    iatSeatNo: {
+      type: String,
+      default: '',
+    },
+    eseSeatNo: {
+      type: String,
+      default: '',
+    },
     exams: {
       type: [ExamMarksSchema],
       default: [],

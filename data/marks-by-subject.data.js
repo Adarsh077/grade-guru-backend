@@ -21,6 +21,10 @@ class MarksBySubjectDataLayer {
         }
       }
 
+      marksBySubject.marks = marksBySubject.marks.filter((marks) =>
+        studentIds.includes(`${marks.student}`),
+      );
+
       await marksBySubject.save();
 
       return { marksBySubject };
@@ -98,6 +102,34 @@ class MarksBySubjectDataLayer {
         },
       ],
     });
+
+    return { marksBySubject };
+  }
+
+  async updateSeatNo(data) {
+    const { subjectId, studentId, iatSeatNo, eseSeatNo } = data;
+
+    const marksBySubject = await MarksBySubjectModel.findOne({
+      subject: new mongoose.Types.ObjectId(subjectId),
+    });
+
+    if (!marksBySubject) return { marksBySubject: null };
+
+    const marksIndex = marksBySubject.marks.findIndex(
+      (mark) => `${mark.student}` === `${studentId}`,
+    );
+
+    if (marksIndex > -1) {
+      if (eseSeatNo) {
+        marksBySubject.marks[marksIndex].eseSeatNo = eseSeatNo;
+      }
+
+      if (iatSeatNo) {
+        marksBySubject.marks[marksIndex].iatSeatNo = iatSeatNo;
+      }
+
+      await marksBySubject.save();
+    }
 
     return { marksBySubject };
   }

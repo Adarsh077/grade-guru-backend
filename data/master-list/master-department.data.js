@@ -41,6 +41,22 @@ class MasterDepartmentDataLayer {
     return { departments };
   }
 
+  async findOne({ name }) {
+    const filter = {
+      isDeleted: false,
+    };
+
+    if (name) {
+      filter.name = name;
+    }
+
+    const query = MasterListDepartmentModel.findOne(filter);
+
+    const department = await query.populate('hod', '_id name');
+
+    return { department };
+  }
+
   async findById(departmentId) {
     const department = await MasterListDepartmentModel.findOne({
       _id: new mongoose.Types.ObjectId(departmentId),

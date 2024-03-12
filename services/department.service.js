@@ -11,11 +11,26 @@ class DepartmentService {
   async create(data) {
     const { name, hod, batch, ability } = data;
 
+    const { departments } = await departmentDataLayer.findAll({
+      ability: ability,
+      batch: batch,
+    });
+
+    let maxCodeForSeatNo = Math.max(
+      ...departments
+        .map((department) => department.codeForSeatNo || 0)
+        .filter((codeForSeatNo) => codeForSeatNo),
+    );
+    if (maxCodeForSeatNo === -Infinity) {
+      maxCodeForSeatNo = 0;
+    }
+
     const { department } = await departmentDataLayer.create({
       name,
       hod,
       batch,
       ability,
+      codeForSeatNo: maxCodeForSeatNo + 1,
     });
 
     return { department };

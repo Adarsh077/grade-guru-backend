@@ -14,6 +14,12 @@ class BatchDataLayer {
 
     return { batches };
   }
+
+  async findOne({ name }) {
+    const batch = await BatchModel.findOne({ name: name }).sort('-createdAt');
+
+    return { batch };
+  }
 }
 
 module.exports = new BatchDataLayer();

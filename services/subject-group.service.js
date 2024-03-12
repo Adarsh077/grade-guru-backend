@@ -1,6 +1,7 @@
 const { subjectGroupDataLayer, marksBySubjectDataLayer } = require('../data');
 const { subjectService } = require('./index');
 const { AppError } = require('../utils');
+const semesterService = require('./semester.service');
 
 class SubjectGroupService {
   async create(data) {
@@ -69,6 +70,8 @@ class SubjectGroupService {
         });
       }
     }
+
+    await semesterService.generateSeatNoForStudents(subjectGroup.semester);
 
     return { subjectGroup };
   }

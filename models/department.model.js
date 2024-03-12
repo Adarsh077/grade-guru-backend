@@ -9,6 +9,7 @@ const DepartmentSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     hod: {
       type: mongoose.Types.ObjectId,
@@ -22,6 +23,10 @@ const DepartmentSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    codeForSeatNo: {
+      type: Number,
+      required: true,
     },
   },
   {

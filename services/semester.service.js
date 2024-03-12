@@ -1,10 +1,18 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
-const { semesterDataLayer } = require('../data');
+const {
+  semesterDataLayer,
+  subjectGroupDataLayer,
+  departmentDataLayer,
+  subjectDataLayer,
+  marksBySubjectDataLayer,
+  batchDataLayer,
+} = require('../data');
 const {
   masterSemesterDataLayer,
   masterSubjectDataLayer,
+  masterDepartmentDataLayer,
 } = require('../data/master-list');
 const { AppError } = require('../utils');
 const subjectService = require('./subject.service');
@@ -91,15 +99,24 @@ class SemesterService {
     const regularBatchYear = new Date().getFullYear() - persuingYearBySemester;
     const dseBatchYear = regularBatchYear + 1;
 
+    const { department } = await departmentDataLayer.findById(
+      semester.department,
+    );
+
+    const { department: masterDepartment } =
+      await masterDepartmentDataLayer.findOne({
+        name: department.name,
+      });
+
     const { students: regularStudents } = await studentService.find({
       admissionYear: regularBatchYear,
-      departmentId: semester.department,
+      departmentId: masterDepartment._id,
       studentType: StudentTypeEnum.REGULAR,
     });
 
     const { students: dseStudents } = await studentService.find({
       admissionYear: dseBatchYear,
-      departmentId: semester.department,
+      departmentId: masterDepartment._id,
       studentType: StudentTypeEnum.DSE,
     });
 
@@ -109,6 +126,101 @@ class SemesterService {
     ];
 
     return { students };
+  }
+
+  async generateSeatNoForStudents(semesterId) {
+    const { semester } = await semesterDataLayer.findById(semesterId);
+    const { department } = await departmentDataLayer.findById(
+      semester.department,
+    );
+    const { batch } = await batchDataLayer.findOne({
+      name: department.batch,
+    });
+
+    const { subjectGroups } = await subjectGroupDataLayer.findAll({
+      semesterId,
+    });
+
+    const studentsBySubjectGroup = {};
+    for (const subjectGroup of subjectGroups) {
+      const { subjects } = await subjectDataLayer.findAll({
+        subjectGroupId: subjectGroup._id,
+      });
+
+      for (const subject of subjects) {
+        const { marksBySubject } =
+          await marksBySubjectDataLayer.getMarksBySubjectId({
+            subjectId: subject._id,
+          });
+
+        if (!studentsBySubjectGroup[subjectGroup._id]) {
+          studentsBySubjectGroup[subjectGroup._id] = [];
+        }
+
+        marksBySubject.marks.forEach((marks) => {
+          if (
+            !studentsBySubjectGroup[subjectGroup._id].find(
+              (student) => `${student.studentId}` === `${marks.student._id}`,
+            )
+          ) {
+            studentsBySubjectGroup[subjectGroup._id].push({
+              studentId: marks.student._id,
+            });
+          }
+        });
+      }
+    }
+
+    let studentCount = 1;
+    for (const subjectGroup of subjectGroups) {
+      const subjectGroupStudents = studentsBySubjectGroup[subjectGroup._id];
+
+      const { subjects } = await subjectDataLayer.findAll({
+        subjectGroupId: subjectGroup._id,
+      });
+      for (const subject of subjects) {
+        const { marksBySubject } =
+          await marksBySubjectDataLayer.getMarksBySubjectId({
+            subjectId: subject._id,
+          });
+
+        for (const marks of marksBySubject.marks) {
+          const studentIndex = subjectGroupStudents.findIndex(
+            (student) => `${student.studentId}` === `${marks.student._id}`,
+          );
+          if (
+            !subjectGroupStudents[studentIndex].iatSeatNo ||
+            !subjectGroupStudents[studentIndex].eseSeatNo
+          ) {
+            const iatSeatNo = `${
+              department.codeForSeatNo
+            }${`0${semester.number}`.slice(-2)}${`000${studentCount}`.slice(
+              -3,
+            )}`;
+
+            const isEvenSemester = semester.number % 2 === 0;
+            const year = isEvenSemester ? batch.year + 1 : batch.year;
+
+            const eseSeatNo = `CC${`${year}`.slice(-2)}${
+              isEvenSemester ? 1 : 2
+            }${department.codeForSeatNo}${
+              semester.number
+            }${`000${studentCount}`.slice(-3)}`;
+
+            subjectGroupStudents[studentIndex].iatSeatNo = iatSeatNo;
+            subjectGroupStudents[studentIndex].eseSeatNo = eseSeatNo;
+            studentCount += 1;
+          }
+
+          await marksBySubjectDataLayer.updateSeatNo({
+            subjectId: subject._id,
+            studentId: marks.student._id,
+            iatSeatNo: subjectGroupStudents[studentIndex].iatSeatNo,
+            eseSeatNo: subjectGroupStudents[studentIndex].eseSeatNo,
+          });
+        }
+      }
+    }
   }
 }
 

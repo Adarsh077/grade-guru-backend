@@ -1,6 +1,6 @@
 const { marksBySubjectDataLayer } = require('../data');
 
-class SubjectService {
+class MarksBySubjectService {
   async enterMarksFor(data) {
     const { subjectId, studentId, examName, marksScored } = data;
 
@@ -36,6 +36,19 @@ class SubjectService {
 
     return { marksBySubject };
   }
+
+  async updateSeatNo(data) {
+    const { subjectId, studentId, iatSeatNo, eseSeatNo } = data;
+
+    const { marksBySubject } = await marksBySubjectDataLayer.updateSeatNo({
+      subjectId,
+      studentId,
+      iatSeatNo,
+      eseSeatNo,
+    });
+
+    return { marksBySubject };
+  }
 }
 
-module.exports = new SubjectService();
+module.exports = new MarksBySubjectService();
