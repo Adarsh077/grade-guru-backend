@@ -1,4 +1,8 @@
-const { subjectGroupDataLayer, marksBySubjectDataLayer } = require('../data');
+const {
+  subjectGroupDataLayer,
+  marksBySubjectDataLayer,
+  studentDataLayer,
+} = require('../data');
 const { subjectService } = require('./index');
 const { AppError } = require('../utils');
 const semesterService = require('./semester.service');
@@ -44,9 +48,13 @@ class SubjectGroupService {
   }
 
   async enrollStudents(subjectGroupId, { enrolledStudents }) {
+    const { students } = await studentDataLayer.find({
+      names: enrolledStudents,
+    });
+
     const { subjectGroup } = await subjectGroupDataLayer.updateById(
       subjectGroupId,
-      { enrolledStudents },
+      { enrolledStudents: students.map((student) => student._id) },
     );
 
     if (!subjectGroup) {
