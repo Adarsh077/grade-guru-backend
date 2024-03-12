@@ -35,6 +35,17 @@ class StudentDataLayer {
     return { students };
   }
 
+  async findById(studentId) {
+    const filter = {
+      isDeleted: false,
+      _id: new mongoose.Types.ObjectId(studentId),
+    };
+
+    const student = await StudentsModel.findOne(filter);
+
+    return { student };
+  }
+
   async update(studentId, { name, email }) {
     const updateObject = {};
 

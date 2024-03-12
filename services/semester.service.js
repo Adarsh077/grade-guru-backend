@@ -1,6 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
 const {
   semesterDataLayer,
   subjectGroupDataLayer,
@@ -221,6 +218,42 @@ class SemesterService {
         }
       }
     }
+  }
+
+  async enrolledStudentList(semesterId) {
+    const { subjectGroups } = await subjectGroupDataLayer.findAll({
+      semesterId,
+    });
+
+    const { subjects } = await subjectDataLayer.findAll({
+      subjectGroupIds: subjectGroups.map((subjectGroup) => subjectGroup._id),
+    });
+
+    const students = [];
+
+    for (const subject of subjects) {
+      const { marksBySubject } =
+        await marksBySubjectDataLayer.getMarksBySubjectId({
+          subjectId: subject._id,
+        });
+
+      for (const marks of marksBySubject.marks) {
+        const isAlreadyPushed = students.find(
+          (student) => `${student.studentId}` === `${marks.student._id}`,
+        );
+
+        if (!isAlreadyPushed) {
+          students.push({
+            studentId: marks.student._id,
+            name: marks.student.name,
+            iatSeatNo: marks.iatSeatNo,
+            eseSeatNo: marks.eseSeatNo,
+          });
+        }
+      }
+    }
+
+    return { students };
   }
 }
 

@@ -20,6 +20,13 @@ router
   );
 
 router
+  .route('/:semesterId/enrolled-students')
+  .get(
+    semesterValidator.enrolledStudentList,
+    semesterController.enrolledStudentList,
+  );
+
+router
   .route('/:semesterId/subject-groups')
   .post(subjectGroupValidator.create, subjectGroupController.create)
   .get(subjectGroupValidator.findAll, subjectGroupController.findAll);

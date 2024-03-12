@@ -88,3 +88,14 @@ exports.findRegisteredStudents = catchAsync(async (req, res) => {
     body: { students },
   });
 });
+
+exports.enrolledStudentList = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+
+  const { students } = await semesterService.enrolledStudentList(semesterId);
+
+  res.send({
+    status: 'success',
+    body: { students },
+  });
+});
