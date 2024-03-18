@@ -29,9 +29,16 @@ const StudentTypeEnum = {
   DSE: 'DSE',
 };
 
+const FinalResultEnum = {
+  P: 'P',
+  F: 'F',
+  'P#': 'P#',
+};
+
 module.exports = {
   ExamNamesEnum,
   SubjectTypeEnum,
   StudentTypeEnum,
   ExamsBySubjectType,
+  FinalResultEnum,
 };

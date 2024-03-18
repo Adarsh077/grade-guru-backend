@@ -150,6 +150,8 @@ class SemesterService {
             subjectId: subject._id,
           });
 
+        if (!marksBySubject) continue;
+
         if (!studentsBySubjectGroup[subjectGroup._id]) {
           studentsBySubjectGroup[subjectGroup._id] = [];
         }
@@ -180,6 +182,8 @@ class SemesterService {
           await marksBySubjectDataLayer.getMarksBySubjectId({
             subjectId: subject._id,
           });
+
+        if (!marksBySubject) continue;
 
         for (const marks of marksBySubject.marks) {
           const studentIndex = subjectGroupStudents.findIndex(
