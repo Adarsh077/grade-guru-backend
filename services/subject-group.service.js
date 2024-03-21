@@ -2,10 +2,12 @@ const {
   subjectGroupDataLayer,
   marksBySubjectDataLayer,
   studentDataLayer,
+  subjectDataLayer,
 } = require('../data');
-const { subjectService } = require('./index');
+const { subjectService } = require('./student.service');
 const { AppError } = require('../utils');
 const semesterService = require('./semester.service');
+const resultService = require('./result.service');
 
 class SubjectGroupService {
   async create(data) {
@@ -89,6 +91,82 @@ class SubjectGroupService {
       await subjectGroupDataLayer.deleteById(subjectGroupId);
 
     return { subjectGroup };
+  }
+
+  async enrolledStudentList(subjectGroupId) {
+    const { subjectGroup } =
+      await subjectGroupDataLayer.findById(subjectGroupId);
+
+    const { subjects } = await subjectDataLayer.findAll({
+      subjectGroupId: subjectGroup._id,
+    });
+
+    const students = [];
+
+    for (const subject of subjects) {
+      const { marksBySubject } =
+        await marksBySubjectDataLayer.getMarksBySubjectId({
+          subjectId: subject._id,
+        });
+
+      for (const marks of marksBySubject.marks) {
+        const isAlreadyPushed = students.find(
+          (student) => `${student.studentId}` === `${marks.student._id}`,
+        );
+
+        if (!isAlreadyPushed) {
+          students.push({
+            studentId: marks.student._id,
+            name: marks.student.name,
+            iatSeatNo: marks.iatSeatNo,
+            eseSeatNo: marks.eseSeatNo,
+          });
+        }
+      }
+    }
+
+    return { students };
+  }
+
+  async generateResultBy(subjectGroupId) {
+    const { students } = await this.enrolledStudentList(subjectGroupId);
+
+    const { subjects } = await subjectDataLayer.findAll({
+      subjectGroupId: subjectGroupId,
+    });
+
+    const { marksBySubjects } = await marksBySubjectDataLayer.findBy({
+      subjectIds: subjects.map((subject) => subject._id),
+    });
+
+    const marksByStudents = [];
+
+    for (const student of students) {
+      const marksByStudent = {
+        ...student,
+        subjects: [],
+      };
+
+      for (const marksBySubject of marksBySubjects) {
+        const marksOfStudentBySubject = marksBySubject.marks.find(
+          (marks) => `${marks.student._id}` === `${student.studentId}`,
+        );
+
+        marksByStudent.subjects.push({
+          ...JSON.parse(JSON.stringify(marksBySubject.subject)),
+          exams: marksOfStudentBySubject.exams,
+        });
+      }
+
+      marksByStudents.push(marksByStudent);
+    }
+
+    await resultService.generateResult(marksByStudents[0]);
+    // for (const marksByStudent of marksByStudents) {
+    //   await resultService.calculateResult(marksByStudent);
+    // }
+
+    return { marksByStudents };
   }
 }
 

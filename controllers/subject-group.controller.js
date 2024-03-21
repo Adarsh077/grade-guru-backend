@@ -79,3 +79,17 @@ exports.enrollStudents = catchAsync(async (req, res) => {
     body: { subjectGroup },
   });
 });
+
+exports.generateResultBy = catchAsync(async (req, res) => {
+  const { subjectGroupId } = req.params;
+
+  const { marksByStudents } =
+    await subjectGroupService.generateResultBy(subjectGroupId);
+
+  res.send({
+    status: 'success',
+    body: { marksByStudents },
+  });
+});
+
+subjectGroupService.generateResultBy('65f11e90f734d2e0d873c749');

@@ -21,4 +21,8 @@ router
     subjectGroupController.enrollStudents,
   );
 
+router
+  .route('/:subjectGroupId/result')
+  .get(subjectGroupController.generateResultBy);
+
 module.exports = router;

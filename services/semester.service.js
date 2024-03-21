@@ -15,6 +15,7 @@ const { AppError } = require('../utils');
 const subjectService = require('./subject.service');
 const studentService = require('./student.service');
 const { StudentTypeEnum } = require('../enums');
+const subjectGroupService = require('./subject-group.service');
 
 class SemesterService {
   async create(data) {
@@ -229,32 +230,13 @@ class SemesterService {
       semesterId,
     });
 
-    const { subjects } = await subjectDataLayer.findAll({
-      subjectGroupIds: subjectGroups.map((subjectGroup) => subjectGroup._id),
-    });
-
     const students = [];
 
-    for (const subject of subjects) {
-      const { marksBySubject } =
-        await marksBySubjectDataLayer.getMarksBySubjectId({
-          subjectId: subject._id,
-        });
+    for (const subjectGroup of subjectGroups) {
+      const { students: enrolledStudents } =
+        await subjectGroupService.enrolledStudentList(subjectGroup._id);
 
-      for (const marks of marksBySubject.marks) {
-        const isAlreadyPushed = students.find(
-          (student) => `${student.studentId}` === `${marks.student._id}`,
-        );
-
-        if (!isAlreadyPushed) {
-          students.push({
-            studentId: marks.student._id,
-            name: marks.student.name,
-            iatSeatNo: marks.iatSeatNo,
-            eseSeatNo: marks.eseSeatNo,
-          });
-        }
-      }
+      students.push(...enrolledStudents);
     }
 
     return { students };

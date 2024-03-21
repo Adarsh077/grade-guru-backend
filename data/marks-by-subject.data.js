@@ -143,6 +143,24 @@ class MarksBySubjectDataLayer {
 
     return { marksBySubject };
   }
+
+  async findBy(data) {
+    const { subjectId, subjectIds } = data;
+
+    const filter = {};
+    if (subjectId) {
+      filter.subject = subjectId;
+    }
+    if (subjectIds) {
+      filter.subject = { $in: subjectIds };
+    }
+
+    const marksBySubjects = await MarksBySubjectModel.find(filter)
+      .populate('marks.student', 'name')
+      .populate('subject', 'name code subjectType');
+
+    return { marksBySubjects };
+  }
 }
 
 module.exports = new MarksBySubjectDataLayer();
