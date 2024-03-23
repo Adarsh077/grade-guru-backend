@@ -7,7 +7,7 @@ const {
 const { subjectService } = require('./student.service');
 const { AppError } = require('../utils');
 const semesterService = require('./semester.service');
-const resultService = require('./result.service');
+const resultService = require('./result/result.service');
 
 class SubjectGroupService {
   async create(data) {
@@ -129,6 +129,8 @@ class SubjectGroupService {
   }
 
   async generateResultBy(subjectGroupId) {
+    const { subjectGroup } = await this.findById(subjectGroupId);
+
     const { students } = await this.enrolledStudentList(subjectGroupId);
 
     const { subjects } = await subjectDataLayer.findAll({
@@ -161,10 +163,13 @@ class SubjectGroupService {
       marksByStudents.push(marksByStudent);
     }
 
-    await resultService.generateResult(marksByStudents[0]);
-    // for (const marksByStudent of marksByStudents) {
-    //   await resultService.calculateResult(marksByStudent);
-    // }
+    for (const marksByStudent of marksByStudents) {
+      await resultService.generateResult(
+        subjectGroup.semester,
+        subjectGroup._id,
+        marksByStudent,
+      );
+    }
 
     return { marksByStudents };
   }

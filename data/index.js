@@ -7,3 +7,4 @@ exports.subjectDataLayer = require('./subject.data');
 exports.studentDataLayer = require('./student.data');
 exports.subjectGroupDataLayer = require('./subject-group.data');
 exports.marksBySubjectDataLayer = require('./marks-by-subject.data');
+exports.resultDataLayer = require('./result.data');

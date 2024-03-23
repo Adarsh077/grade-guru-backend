@@ -1,42 +1,7 @@
-const { SubjectTypeEnum, ExamNamesEnum } = require('../enums');
-const { marksUtils } = require('../utils');
+const { ExamNamesEnum } = require('../../enums');
+const { marksUtils } = require('../../utils');
 
-class ResultService {
-  async generateResult(marksByStudent) {
-    const marks = [];
-
-    for (const marksBySubject of marksByStudent.subjects) {
-      if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN) {
-        const resultBySubject =
-          await this.generateWrittenExamResult(marksBySubject);
-        marks.push(resultBySubject);
-      } else if (marksBySubject.subjectType === SubjectTypeEnum.LAB) {
-        this.calculateLabSubjectTotal(marksBySubject);
-      }
-    }
-
-    const marksOTotal = this.getMarkOTotal(marks);
-    const creditsTotal = this.getCreditsTotal(marks);
-    const gpcTotal = this.getGPCTotal(marks);
-
-    const sgpi = 0;
-    const cgpi = 0;
-
-    const result = {
-      student: marksByStudent.studentId,
-      seatNo: marksByStudent.eseSeatNo,
-      sgpi,
-      finalResult: 'P',
-      cgpi,
-      marks,
-      marksOTotal,
-      creditsTotal,
-      gpcTotal,
-    };
-
-    return result;
-  }
-
+class WrittenExamResultService {
   // * Written exam calculation
   async generateWrittenExamResult(marksBySubject) {
     const totalMarks = this.calculateWrittenSubjectTotal(marksBySubject);
@@ -121,47 +86,6 @@ class ResultService {
 
     return totalMarks;
   }
-
-  // ! TODO
-  // * Lab Result Calculation
-  calculateLabSubjectTotal(marksBySubject) {
-    console.log(marksBySubject);
-  }
-
-  // * Utils
-  getMarkOTotal(subjects) {
-    let marksOTotal = 0;
-
-    for (const subject of subjects) {
-      const TOTExams = subject.exams.find(
-        (exam) => exam.examName === ExamNamesEnum.TOT,
-      );
-
-      if (TOTExams) marksOTotal += TOTExams.marksO;
-    }
-
-    return marksOTotal;
-  }
-
-  getCreditsTotal(subjects) {
-    let creditsTotal = 0;
-
-    for (const subject of subjects) {
-      if (subject.credits) creditsTotal += subject.credits;
-    }
-
-    return creditsTotal;
-  }
-
-  getGPCTotal(subjects) {
-    let gpcTotal = 0;
-
-    for (const subject of subjects) {
-      if (subject.gpc) gpcTotal += subject.gpc;
-    }
-
-    return gpcTotal;
-  }
 }
 
-module.exports = new ResultService();
+module.exports = new WrittenExamResultService();

@@ -7,4 +7,4 @@ exports.subjectService = require('./subject.service');
 exports.studentService = require('./student.service');
 exports.subjectGroupService = require('./subject-group.service');
 exports.marksBySubjectService = require('./marks-by-subject.service');
-exports.resultService = require('./result.service');
+exports.resultService = require('./result/result.service');

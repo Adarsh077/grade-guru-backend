@@ -91,5 +91,3 @@ exports.generateResultBy = catchAsync(async (req, res) => {
     body: { marksByStudents },
   });
 });
-
-subjectGroupService.generateResultBy('65f11e90f734d2e0d873c749');
