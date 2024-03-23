@@ -157,7 +157,7 @@ class MarksBySubjectDataLayer {
 
     const marksBySubjects = await MarksBySubjectModel.find(filter)
       .populate('marks.student', 'name')
-      .populate('subject', 'name code subjectType');
+      .populate('subject', 'name code subjectType credits');
 
     return { marksBySubjects };
   }

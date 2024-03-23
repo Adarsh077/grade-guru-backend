@@ -3,7 +3,7 @@ const { SubjectModel } = require('../models');
 
 class SubjectDataLayer {
   async create(data) {
-    const { name, subjectGroupId, staffId, code, subjectType } = data;
+    const { name, subjectGroupId, staffId, code, subjectType, credits } = data;
 
     const subject = await SubjectModel.create({
       name,
@@ -11,6 +11,7 @@ class SubjectDataLayer {
       staff: staffId,
       code,
       subjectType,
+      credits,
     });
 
     return { subject };

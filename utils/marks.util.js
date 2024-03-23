@@ -7,7 +7,7 @@ const maxMarksByExamName = {
   [ExamNamesEnum.IAT2]: 20,
   [ExamNamesEnum.PROR]: 25,
   [ExamNamesEnum.TW]: 25,
-  [ExamNamesEnum.TOT]: 25,
+  [ExamNamesEnum.TOT]: 100,
 };
 
 const gradeByPercentage = (percentage) => {
@@ -46,9 +46,7 @@ const gradeByPercentage = (percentage) => {
   return '';
 };
 
-exports.gradeByPercentage = gradeByPercentage;
-
-exports.gradeByMarksAndExam = (examName, marksScored) => {
+const gradeByMarksAndExam = (examName, marksScored) => {
   const maxMarks = maxMarksByExamName[examName];
   if (!maxMarks) return '';
 
@@ -56,3 +54,20 @@ exports.gradeByMarksAndExam = (examName, marksScored) => {
 
   return gradeByPercentage(percantage);
 };
+
+const gradePointByGrade = (grade) => {
+  const gradePointsByGrade = {
+    O: 10,
+    A: 9,
+    B: 8,
+    C: 7,
+    D: 6,
+    E: 5,
+    P: 4,
+    F: 0,
+  };
+
+  return gradePointsByGrade[grade];
+};
+
+module.exports = { gradeByMarksAndExam, gradePointByGrade };
