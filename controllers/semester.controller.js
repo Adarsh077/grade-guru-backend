@@ -99,3 +99,13 @@ exports.enrolledStudentList = catchAsync(async (req, res) => {
     body: { students },
   });
 });
+
+exports.generateResult = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+
+  await semesterService.generateResult(semesterId);
+
+  res.send({
+    status: 'success',
+  });
+});

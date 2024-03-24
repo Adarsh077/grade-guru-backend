@@ -31,4 +31,8 @@ router
   .post(subjectGroupValidator.create, subjectGroupController.create)
   .get(subjectGroupValidator.findAll, subjectGroupController.findAll);
 
+router
+  .route('/:semesterId/result')
+  .get(semesterValidator.generateResult, semesterController.generateResult);
+
 module.exports = router;

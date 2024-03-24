@@ -45,6 +45,12 @@ exports.findRegisteredStudents = celebrate({
   }),
 });
 
+exports.generateResult = celebrate({
+  [Segments.PARAMS]: Joi.object().keys({
+    semesterId: Joi.string().required(),
+  }),
+});
+
 exports.enrolledStudentList = celebrate({
   [Segments.PARAMS]: Joi.object().keys({
     semesterId: Joi.string().required(),

@@ -241,6 +241,16 @@ class SemesterService {
 
     return { students };
   }
+
+  async generateResult(semesterId) {
+    const { subjectGroups } = await subjectGroupDataLayer.findAll({
+      semesterId,
+    });
+
+    for (const subjectGroup of subjectGroups) {
+      await subjectGroupService.generateResultBy(subjectGroup._id);
+    }
+  }
 }
 
 module.exports = new SemesterService();
