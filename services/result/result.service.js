@@ -51,6 +51,14 @@ class ResultService {
 
     return { result };
   }
+
+  async getResultsBy({ subjectGroupId }) {
+    const { result } = await resultDataLayer.getResultsBy({
+      subjectGroupId,
+    });
+
+    return { result };
+  }
 }
 
 module.exports = new ResultService();

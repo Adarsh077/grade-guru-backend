@@ -31,6 +31,19 @@ class ResultDataLayer {
 
     return { result };
   }
+
+  async getResultsBy(data) {
+    const { subjectGroupId } = data;
+
+    const filter = {};
+    if (subjectGroupId) {
+      filter.subjectGroup = new mongoose.Types.ObjectId(subjectGroupId);
+    }
+
+    const result = await ResultModel.findOne(filter);
+
+    return { result };
+  }
 }
 
 module.exports = new ResultDataLayer();

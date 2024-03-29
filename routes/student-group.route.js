@@ -1,6 +1,10 @@
 const router = require('express').Router();
 
-const { subjectGroupController, subjectController } = require('../controllers');
+const {
+  subjectGroupController,
+  subjectController,
+  resultController,
+} = require('../controllers');
 const { subjectGroupValidator, subjectValidator } = require('../validators');
 
 router
@@ -23,6 +27,7 @@ router
 
 router
   .route('/:subjectGroupId/result')
-  .get(subjectGroupController.generateResultBy);
+  .post(subjectGroupController.generateResultBy)
+  .get(resultController.getResultsBy);
 
 module.exports = router;
