@@ -28,6 +28,10 @@ const MarksOfStudentSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    hasParticipatedInNss: {
+      type: Boolean,
+      default: false,
+    },
     exams: {
       type: [ExamMarksSchema],
       default: [],

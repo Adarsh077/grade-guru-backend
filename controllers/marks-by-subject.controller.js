@@ -3,13 +3,14 @@ const { catchAsync } = require('../utils');
 
 exports.enterMarksFor = catchAsync(async (req, res) => {
   const { subjectId, studentId } = req.params;
-  const { examName, marksScored } = req.body;
+  const { examName, marksScored, hasParticipatedInNss } = req.body;
 
   await marksBySubjectService.enterMarksFor({
     subjectId,
     studentId,
     examName,
     marksScored,
+    hasParticipatedInNss,
   });
 
   res.send({

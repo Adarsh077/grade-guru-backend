@@ -2,13 +2,20 @@ const { marksBySubjectDataLayer } = require('../data');
 
 class MarksBySubjectService {
   async enterMarksFor(data) {
-    const { subjectId, studentId, examName, marksScored } = data;
+    const {
+      subjectId,
+      studentId,
+      examName,
+      marksScored,
+      hasParticipatedInNss,
+    } = data;
 
     const { marksBySubject } = await marksBySubjectDataLayer.enterMarksFor({
       subjectId,
       studentId,
       examName,
       marksScored,
+      hasParticipatedInNss,
     });
 
     return { marksBySubject };

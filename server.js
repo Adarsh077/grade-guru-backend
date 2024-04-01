@@ -12,10 +12,7 @@ const app = require('./app');
 const appConfig = require('./config');
 
 mongoose
-  .connect(appConfig.DATABASE_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(appConfig.DATABASE_URI)
   .then(() => console.log(`🔥 DB connect to ${appConfig.DATABASE_URI}`));
 
 const port = appConfig.PORT || 8000;

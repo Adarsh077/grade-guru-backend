@@ -7,10 +7,9 @@ exports.enterMarksFor = celebrate({
     studentId: Joi.string().required(),
   }),
   [Segments.BODY]: Joi.object().keys({
-    examName: Joi.string()
-      .valid(...Object.values(ExamNamesEnum))
-      .required(),
-    marksScored: Joi.number().min(0).required(),
+    examName: Joi.string().valid(...Object.values(ExamNamesEnum)),
+    marksScored: Joi.number().min(0),
+    hasParticipatedInNss: Joi.boolean(),
   }),
 });
 

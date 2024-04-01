@@ -4,7 +4,7 @@ const { MarksBySubjectModel } = require('../models');
 class MarksBySubjectDataLayer {
   async createMarksEntryForEnrolledStudents({ subjectId, studentIds }) {
     let marksBySubject = await MarksBySubjectModel.findOne({
-      subject: new mongoose.Types.ObjectId(subjectId),
+      subject: new mongoose.Types.ObjectId(`${subjectId}`),
     });
 
     if (marksBySubject) {
@@ -59,10 +59,16 @@ class MarksBySubjectDataLayer {
   }
 
   async enterMarksFor(data) {
-    const { subjectId, studentId, examName, marksScored } = data;
+    const {
+      subjectId,
+      studentId,
+      examName,
+      marksScored,
+      hasParticipatedInNss,
+    } = data;
 
     let marksBySubject = await MarksBySubjectModel.findOne({
-      subject: new mongoose.Types.ObjectId(subjectId),
+      subject: new mongoose.Types.ObjectId(`${subjectId}`),
     });
 
     if (marksBySubject && marksBySubject.marks && marksBySubject.marks.length) {
@@ -70,23 +76,36 @@ class MarksBySubjectDataLayer {
         (mark) => `${mark.student}` === `${studentId}`,
       );
       if (marksIndex !== -1) {
-        const examMarksIndex = marksBySubject.marks[marksIndex].exams.findIndex(
-          (exam) => exam.examName === examName,
-        );
-        if (examMarksIndex !== -1) {
-          marksBySubject.marks[marksIndex].exams[examMarksIndex].marksScored =
-            marksScored;
-        } else {
-          marksBySubject.marks[marksIndex].exams.push({
-            examName,
-            marksScored,
-          });
+        if (examName && typeof marksScored === 'number') {
+          const examMarksIndex = marksBySubject.marks[
+            marksIndex
+          ].exams.findIndex((exam) => exam.examName === examName);
+          if (examMarksIndex !== -1) {
+            marksBySubject.marks[marksIndex].exams[examMarksIndex].marksScored =
+              marksScored;
+          } else {
+            marksBySubject.marks[marksIndex].exams.push({
+              examName,
+              marksScored,
+            });
+          }
+        }
+        if (typeof hasParticipatedInNss === 'boolean') {
+          marksBySubject.marks[marksIndex].hasParticipatedInNss =
+            hasParticipatedInNss;
         }
       } else {
-        marksBySubject.marks.push({
+        const marks = {
           student: studentId,
-          exams: [{ examName, marksScored }],
-        });
+        };
+        if (examName && typeof marksScored === 'number') {
+          marks.exams = [{ examName, marksScored }];
+        }
+        if (typeof hasParticipatedInNss === 'boolean') {
+          marks.hasParticipatedInNss = hasParticipatedInNss;
+        }
+
+        marksBySubject.marks.push(marks);
       }
 
       await marksBySubject.save();
@@ -94,10 +113,10 @@ class MarksBySubjectDataLayer {
     }
 
     marksBySubject = await MarksBySubjectModel.create({
-      subject: new mongoose.Types.ObjectId(subjectId),
+      subject: new mongoose.Types.ObjectId(`${subjectId}`),
       marks: [
         {
-          student: new mongoose.Types.ObjectId(studentId),
+          student: new mongoose.Types.ObjectId(`${studentId}`),
           exams: [{ examName, marksScored }],
         },
       ],
@@ -110,7 +129,7 @@ class MarksBySubjectDataLayer {
     const { subjectId, studentId, iatSeatNo, eseSeatNo } = data;
 
     const marksBySubject = await MarksBySubjectModel.findOne({
-      subject: new mongoose.Types.ObjectId(subjectId),
+      subject: new mongoose.Types.ObjectId(`${subjectId}`),
     });
 
     if (!marksBySubject) return { marksBySubject: null };
@@ -138,7 +157,7 @@ class MarksBySubjectDataLayer {
     const { subjectId } = data;
 
     const marksBySubject = await MarksBySubjectModel.findOne({
-      subject: new mongoose.Types.ObjectId(subjectId),
+      subject: new mongoose.Types.ObjectId(`${subjectId}`),
     }).populate('marks.student', 'name');
 
     return { marksBySubject };

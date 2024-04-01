@@ -29,6 +29,28 @@ const StudentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // resultBySemesters: {
+    //   semester1: {
+    //     resultId: '',
+    //     status: 'PASS',
+    //     batch: 2023,
+    //   },
+    //   semester2: {
+    //     resultId: '',
+    //     status: 'ATKT',
+    //     batch: 2023,
+    //   },
+    //   semester3: {
+    //     resultId: '',
+    //     status: 'PASS',
+    //     batch: 2024,
+    //   },
+    //   semester4: {
+    //     resultId: '',
+    //     status: 'ATKT',
+    //     batch: 2024,
+    //   },
+    // },
   },
   { timestamps: true },
 );
