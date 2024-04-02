@@ -108,7 +108,11 @@ class MarksBySubjectDataLayer {
         marksBySubject.marks.push(marks);
       }
 
-      await marksBySubject.save();
+      try {
+        await marksBySubject.save();
+      } catch (error) {
+        console.log(error);
+      }
       return { marksBySubject };
     }
 

@@ -5,7 +5,6 @@ const {
   subjectDataLayer,
 } = require('../data');
 const { AppError } = require('../utils');
-const semesterService = require('./semester.service');
 const resultService = require('./result/result.service');
 
 class SubjectGroupService {

@@ -5,10 +5,9 @@ class WrittenExamResultService {
   // * Written exam calculation
   async generateWrittenExamResult(marksBySubject) {
     const totalMarks = this.calculateWrittenSubjectTotal(marksBySubject);
-
     let { credits } = marksBySubject;
 
-    if (totalMarks.ESE < 32) {
+    if (totalMarks.ESE < 32 || totalMarks.IA < 8) {
       credits = 0;
     }
 
@@ -17,6 +16,15 @@ class WrittenExamResultService {
       totalMarks.TOT,
     );
     const gp = marksUtils.gradePointByGrade(totalGrade);
+
+    const ESEGrade = marksUtils.gradeByMarksAndExam(
+      ExamNamesEnum.ESE,
+      totalMarks.ESE,
+    );
+    const IAGrade = marksUtils.gradeByMarksAndExam(
+      ExamNamesEnum.IA,
+      totalMarks.IA,
+    );
 
     return {
       subject: marksBySubject._id,
@@ -27,26 +35,19 @@ class WrittenExamResultService {
         {
           examName: ExamNamesEnum.ESE,
           marksO: totalMarks.ESE,
-          grade: marksUtils.gradeByMarksAndExam(
-            ExamNamesEnum.ESE,
-            totalMarks.ESE,
-          ),
+          grade: ESEGrade,
         },
         {
           examName: ExamNamesEnum.IA,
           marksO: totalMarks.IA,
-          grade: marksUtils.gradeByMarksAndExam(
-            ExamNamesEnum.IA,
-            totalMarks.IA,
-          ),
+          grade: IAGrade,
         },
         {
           examName: ExamNamesEnum.TOT,
           marksO: totalMarks.TOT,
-          grade: marksUtils.gradeByMarksAndExam(
-            ExamNamesEnum.TOT,
-            totalMarks.TOT,
-          ),
+          grade: [ESEGrade, IAGrade].includes('F')
+            ? 'F'
+            : marksUtils.gradeByMarksAndExam(ExamNamesEnum.TOT, totalMarks.TOT),
         },
       ],
     };

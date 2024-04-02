@@ -4,7 +4,7 @@ const { ExamNamesEnum } = require('../enums');
 const ExamMarksSchema = new mongoose.Schema({
   examName: {
     type: String,
-    enum: Object.keys(ExamNamesEnum),
+    enum: Object.values(ExamNamesEnum),
     required: true,
   },
   marksScored: {

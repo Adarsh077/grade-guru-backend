@@ -4,7 +4,7 @@ const { AppError } = require('../utils');
 
 class SubjectService {
   async create(data) {
-    const { name, subjectGroupId, staffId, code, credits } = data;
+    const { name, subjectGroupId, staffId, code, credits, subjectType } = data;
 
     const { subject } = await subjectDataLayer.create({
       name,
@@ -12,6 +12,7 @@ class SubjectService {
       staffId,
       code,
       credits,
+      subjectType,
     });
 
     return { subject };
