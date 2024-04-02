@@ -4,7 +4,6 @@ const {
   studentDataLayer,
   subjectDataLayer,
 } = require('../data');
-const { subjectService } = require('./student.service');
 const { AppError } = require('../utils');
 const semesterService = require('./semester.service');
 const resultService = require('./result/result.service');
@@ -63,7 +62,7 @@ class SubjectGroupService {
       throw new AppError({ message: 'Subject Group not found!' }, 404);
     }
 
-    const { subjects } = await subjectService.findAll({
+    const { subjects } = await subjectDataLayer.findAll({
       subjectGroupId: subjectGroup._id,
     });
 
@@ -75,13 +74,11 @@ class SubjectGroupService {
         });
 
       if (marksBySubject && Array.isArray(marksBySubject.marks)) {
-        await subjectService.updateById(subject._id, {
+        await subjectDataLayer.updateById(subject._id, {
           enrolledStudentCount: marksBySubject.marks.length,
         });
       }
     }
-
-    await semesterService.generateSeatNoForStudents(subjectGroup.semester);
 
     return { subjectGroup };
   }

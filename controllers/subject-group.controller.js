@@ -1,4 +1,4 @@
-const { subjectGroupService } = require('../services');
+const { subjectGroupService, semesterService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
@@ -73,6 +73,8 @@ exports.enrollStudents = catchAsync(async (req, res) => {
     subjectGroupId,
     { enrolledStudents },
   );
+
+  await semesterService.generateSeatNoForStudents(subjectGroup.semester);
 
   res.send({
     status: 'success',
