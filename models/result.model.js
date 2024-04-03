@@ -22,6 +22,18 @@ const MarksBySubjectSchema = new mongoose.Schema(
           type: String,
           required: true,
         },
+        graceMarks: {
+          type: Number,
+          default: 0,
+        },
+        marksOAfterGrace: {
+          type: Number,
+          required: true,
+        },
+        symbols: {
+          type: [String],
+          default: [],
+        },
       },
     ],
   },

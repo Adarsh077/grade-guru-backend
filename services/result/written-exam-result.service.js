@@ -1,55 +1,100 @@
 const { ExamNamesEnum } = require('../../enums');
 const { marksUtils } = require('../../utils');
+const { maxMarksByExamName } = require('../../utils/marks.util');
 
 class WrittenExamResultService {
-  // * Written exam calculation
   async generateWrittenExamResult(marksBySubject) {
     const totalMarks = this.calculateWrittenSubjectTotal(marksBySubject);
-    let { credits } = marksBySubject;
-
-    if (totalMarks.ESE < 32 || totalMarks.IA < 8) {
-      credits = 0;
-    }
-
-    const totalGrade = marksUtils.gradeByMarksAndExam(
-      ExamNamesEnum.TOT,
-      totalMarks.TOT,
-    );
-    const gp = marksUtils.gradePointByGrade(totalGrade);
-
-    const ESEGrade = marksUtils.gradeByMarksAndExam(
-      ExamNamesEnum.ESE,
-      totalMarks.ESE,
-    );
-    const IAGrade = marksUtils.gradeByMarksAndExam(
-      ExamNamesEnum.IA,
-      totalMarks.IA,
-    );
 
     return {
       subject: marksBySubject._id,
+      subjectType: marksBySubject.subjectType,
       subjectCode: marksBySubject.code,
-      credits,
-      gpc: gp * credits,
+      credits: marksBySubject.credits,
       exams: [
         {
           examName: ExamNamesEnum.ESE,
           marksO: totalMarks.ESE,
-          grade: ESEGrade,
         },
         {
           examName: ExamNamesEnum.IA,
           marksO: totalMarks.IA,
-          grade: IAGrade,
         },
         {
           examName: ExamNamesEnum.TOT,
           marksO: totalMarks.TOT,
-          grade: [ESEGrade, IAGrade].includes('F')
-            ? 'F'
-            : marksUtils.gradeByMarksAndExam(ExamNamesEnum.TOT, totalMarks.TOT),
         },
       ],
+    };
+  }
+
+  calculateGradeCreditsAndGradePointCredits(marksBySubject) {
+    let { credits } = marksBySubject;
+
+    const ESEMarks = marksBySubject.exams.find(
+      (exam) => exam.examName === ExamNamesEnum.ESE,
+    ).marksOAfterGrace;
+
+    const IAMarks = marksBySubject.exams.find(
+      (exam) => exam.examName === ExamNamesEnum.IA,
+    ).marksOAfterGrace;
+
+    const TOTMarks = marksBySubject.exams.find(
+      (exam) => exam.examName === ExamNamesEnum.TOT,
+    ).marksOAfterGrace;
+
+    if (ESEMarks < 32 || IAMarks < 8) {
+      credits = 0;
+    }
+
+    const ESEGrade = marksUtils.gradeByMarksAndExam(
+      maxMarksByExamName[ExamNamesEnum.ESE],
+      ESEMarks,
+    );
+    const IAGrade = marksUtils.gradeByMarksAndExam(
+      maxMarksByExamName[ExamNamesEnum.IA],
+      IAMarks,
+    );
+
+    let TOTGrade = marksUtils.gradeByMarksAndExam(
+      maxMarksByExamName[ExamNamesEnum.IA] +
+        maxMarksByExamName[ExamNamesEnum.ESE],
+      TOTMarks,
+    );
+
+    if (
+      [
+        ...marksBySubject.exams.find(
+          (exam) => exam.examName === ExamNamesEnum.ESE,
+        ).symbols,
+        marksBySubject.exams.find((exam) => exam.examName === ExamNamesEnum.IA)
+          .symbols,
+      ].includes('F')
+    ) {
+      TOTGrade = 'F';
+    }
+
+    const gp = marksUtils.gradePointByGrade(TOTGrade);
+    marksBySubject.exams = marksBySubject.exams.map((exam) => {
+      if (exam.examName === ExamNamesEnum.ESE) {
+        return { ...exam, grade: ESEGrade };
+      }
+
+      if (exam.examName === ExamNamesEnum.IA) {
+        return { ...exam, grade: IAGrade };
+      }
+
+      if (exam.examName === ExamNamesEnum.TOT) {
+        return { ...exam, grade: TOTGrade };
+      }
+
+      return exam;
+    });
+
+    return {
+      ...marksBySubject,
+      credits: credits,
+      gpc: gp * credits,
     };
   }
 
