@@ -63,7 +63,7 @@ class StudentDataLayer {
 
     const student = await StudentsModel.findOneAndUpdate(
       {
-        _id: new mongoose.Types.ObjectId(studentId),
+        _id: new mongoose.Types.ObjectId(`${studentId}`),
         isDeleted: false,
       },
       updateObject,
@@ -81,6 +81,22 @@ class StudentDataLayer {
     );
 
     return { student };
+  }
+
+  async saveResultBySemester(data) {
+    const { semesterNumber, resultId, status, batchId, studentId } = data;
+
+    const student = await StudentsModel.findById(studentId);
+
+    if (!student) return { student: null };
+
+    student.resultBySemesters[`semester${semesterNumber}`] = {
+      resultId,
+      status,
+      batch: batchId,
+    };
+
+    await student.save();
   }
 }
 

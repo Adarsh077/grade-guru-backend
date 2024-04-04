@@ -1,13 +1,22 @@
-const { SubjectTypeEnum } = require('../../enums');
+const {
+  SubjectTypeEnum,
+  FinalResultEnum,
+  ResultBySemesterStatusEnum,
+} = require('../../enums');
 const WrittenExamResult = require('./written-exam-result.service');
 const LabExamResult = require('./lab-exam-result.service');
 const ResultUtils = require('./result-utils.service');
-const { resultDataLayer } = require('../../data');
+const {
+  resultDataLayer,
+  studentDataLayer,
+  semesterDataLayer,
+  departmentDataLayer,
+  batchDataLayer,
+} = require('../../data');
 
 class ResultService {
   async generateResult(semesterId, subjectGroupId, marksByStudent) {
     const marks = [];
-
     for (const marksBySubject of marksByStudent.subjects) {
       if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN) {
         const resultBySubject =
@@ -72,6 +81,10 @@ class ResultService {
       mark.exams.find((exam) => exam.symbols.includes('F')),
     );
 
+    const hasGraceMarks = !!marksAfterGrace.find((mark) =>
+      mark.exams.find((exam) => exam.symbols.includes('#')),
+    );
+
     const marksOTotal = ResultUtils.getMarkOTotal(marksAfterGrace);
     const creditsTotal = ResultUtils.getCreditsTotal(marksAfterGrace);
     const gpcTotal = ResultUtils.getGPCTotal(marksAfterGrace);
@@ -85,7 +98,12 @@ class ResultService {
       student: marksByStudent.studentId,
       seatNo: marksByStudent.eseSeatNo,
       sgpi,
-      finalResult: hasFailed ? 'F' : 'P',
+      // eslint-disable-next-line no-nested-ternary
+      finalResult: hasFailed
+        ? FinalResultEnum.F
+        : hasGraceMarks
+          ? FinalResultEnum['P#']
+          : FinalResultEnum.P,
       cgpi,
       marks: marksAfterGrace,
       marksOTotal,
@@ -93,7 +111,7 @@ class ResultService {
       gpcTotal,
     };
 
-    const { result } = await resultDataLayer.saveResultOfStudent({
+    const { result } = await this.saveResultOfStudent({
       semesterId,
       subjectGroupId,
       resultOfStudent,
@@ -105,6 +123,35 @@ class ResultService {
   async getResultsBy({ subjectGroupId }) {
     const { result } = await resultDataLayer.getResultsBy({
       subjectGroupId,
+    });
+
+    return { result };
+  }
+
+  async saveResultOfStudent({ semesterId, subjectGroupId, resultOfStudent }) {
+    const { result } = await resultDataLayer.saveResultOfStudent({
+      semesterId,
+      subjectGroupId,
+      resultOfStudent,
+    });
+
+    const { semester } = await semesterDataLayer.findById(semesterId);
+    const { department } = await departmentDataLayer.findById(
+      semester.department,
+    );
+    const { batch } = await batchDataLayer.findOne({
+      name: department.batch,
+    });
+
+    await studentDataLayer.saveResultBySemester({
+      semesterNumber: semester.number,
+      resultId: result._id,
+      status:
+        resultOfStudent.finalResult === FinalResultEnum.F
+          ? ResultBySemesterStatusEnum.ATKT
+          : ResultBySemesterStatusEnum.PASS,
+      batchId: batch._id,
+      studentId: resultOfStudent.student,
     });
 
     return { result };

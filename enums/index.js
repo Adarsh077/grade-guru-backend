@@ -35,10 +35,17 @@ const FinalResultEnum = {
   'P#': 'P#',
 };
 
+const ResultBySemesterStatusEnum = {
+  PASS: 'PASS',
+  ATKT: 'ATKT',
+  DROP: 'DROP',
+};
+
 module.exports = {
   ExamNamesEnum,
   SubjectTypeEnum,
   StudentTypeEnum,
   ExamsBySubjectType,
   FinalResultEnum,
+  ResultBySemesterStatusEnum,
 };

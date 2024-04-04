@@ -1,5 +1,25 @@
 const mongoose = require('mongoose');
-const { StudentTypeEnum } = require('../enums');
+const { StudentTypeEnum, ResultBySemesterStatusEnum } = require('../enums');
+
+const ResultBySemesterSchema = new mongoose.Schema(
+  {
+    resultId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'semesters',
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ResultBySemesterStatusEnum,
+    },
+    batch: {
+      type: mongoose.Types.ObjectId,
+      ref: 'batches',
+    },
+  },
+  { timestamps: true },
+);
 
 const StudentSchema = new mongoose.Schema(
   {
@@ -29,28 +49,24 @@ const StudentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // resultBySemesters: {
-    //   semester1: {
-    //     resultId: '',
-    //     status: 'PASS',
-    //     batch: 2023,
-    //   },
-    //   semester2: {
-    //     resultId: '',
-    //     status: 'ATKT',
-    //     batch: 2023,
-    //   },
-    //   semester3: {
-    //     resultId: '',
-    //     status: 'PASS',
-    //     batch: 2024,
-    //   },
-    //   semester4: {
-    //     resultId: '',
-    //     status: 'ATKT',
-    //     batch: 2024,
-    //   },
-    // },
+    resultBySemesters: {
+      semester2: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
+      semester3: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
+      semester4: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
+      semester5: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
+    },
   },
   { timestamps: true },
 );
