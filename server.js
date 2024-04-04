@@ -15,10 +15,12 @@ mongoose
   .connect(appConfig.DATABASE_URI)
   .then(() => console.log(`🔥 DB connect to ${appConfig.DATABASE_URI}`));
 
-const port = appConfig.PORT || 8000;
+const port = appConfig.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`🔥 App running on port ${port}...`);
 });
+
+module.exports = app;
 
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
