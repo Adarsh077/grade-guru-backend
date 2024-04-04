@@ -9,6 +9,7 @@ exports.create = celebrate({
     name: Joi.string().required(),
     staffId: Joi.string().required(),
     code: Joi.string().required(),
+    isATKTSubject: Joi.bool().default(false),
     subjectType: Joi.string()
       .valid(...Object.values(SubjectTypeEnum))
       .required(),

@@ -9,10 +9,11 @@ const resultService = require('./result/result.service');
 
 class SubjectGroupService {
   async create(data) {
-    const { name, semesterId } = data;
+    const { name, semesterId, isATKTSubjectGroup } = data;
 
     const { subjectGroup } = await subjectGroupDataLayer.create({
       name,
+      isATKTSubjectGroup,
       semesterId,
     });
 

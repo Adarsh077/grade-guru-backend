@@ -42,6 +42,10 @@ const SubjectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isATKTSubject: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -3,11 +3,12 @@ const { SubjectGroupModel } = require('../models');
 
 class SubjectGroupDataLayer {
   async create(data) {
-    const { name, semesterId } = data;
+    const { name, semesterId, isATKTSubjectGroup } = data;
 
     const subjectGroup = await SubjectGroupModel.create({
       name,
       semester: semesterId,
+      isATKTSubjectGroup,
     });
 
     return { subjectGroup };
