@@ -169,3 +169,14 @@ exports.unEnrollStudent = catchAsync(async (req, res) => {
     body: { marksBySubject },
   });
 });
+
+exports.findATKTStudents = catchAsync(async (req, res) => {
+  const { subjectId } = req.params;
+
+  const { students } = await subjectService.findATKTStudents(subjectId);
+
+  res.send({
+    status: 'success',
+    body: { students },
+  });
+});

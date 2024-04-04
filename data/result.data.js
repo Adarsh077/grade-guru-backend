@@ -45,6 +45,12 @@ class ResultDataLayer {
 
     return { result };
   }
+
+  async findById(resultId) {
+    const result = await ResultModel.findById(resultId);
+
+    return { result };
+  }
 }
 
 module.exports = new ResultDataLayer();

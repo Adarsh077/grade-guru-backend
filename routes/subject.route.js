@@ -23,6 +23,10 @@ router
   .post(subjectValidator.enrollStudent, subjectController.enrollStudent);
 
 router
+  .route('/:subjectId/atkt-students')
+  .get(subjectController.findATKTStudents);
+
+router
   .route('/:subjectId/students/:studentId')
   .delete(subjectValidator.unEnrollStudent, subjectController.unEnrollStudent);
 

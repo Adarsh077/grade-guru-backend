@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { StudentsModel } = require('../models');
+const { ResultBySemesterStatusEnum } = require('../enums');
 
 class StudentDataLayer {
   async create(data) {
@@ -97,6 +98,15 @@ class StudentDataLayer {
     };
 
     await student.save();
+  }
+
+  async findStudentsWithATKT(semesterNumber) {
+    const students = await StudentsModel.find({
+      [`resultBySemesters.semester${semesterNumber}.status`]:
+        ResultBySemesterStatusEnum.ATKT,
+    });
+
+    return { students };
   }
 }
 
