@@ -9,7 +9,6 @@ const DepartmentSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     hod: {
       type: mongoose.Types.ObjectId,

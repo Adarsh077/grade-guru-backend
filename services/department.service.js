@@ -24,7 +24,6 @@ class DepartmentService {
     if (maxCodeForSeatNo === -Infinity) {
       maxCodeForSeatNo = 0;
     }
-
     const { department } = await departmentDataLayer.create({
       name,
       hod,
