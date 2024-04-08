@@ -3,11 +3,12 @@ const { catchAsync } = require('../../utils');
 
 exports.create = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
-  const { name } = req.body;
+  const { name, isATKTSubjectGroup } = req.body;
 
   const { subjectGroup } = await masterSubjectGroupService.create({
     name,
     semesterId,
+    isATKTSubjectGroup,
   });
 
   res.send({

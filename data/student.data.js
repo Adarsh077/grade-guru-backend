@@ -43,7 +43,7 @@ class StudentDataLayer {
   async findById(studentId) {
     const filter = {
       isDeleted: false,
-      _id: new mongoose.Types.ObjectId(studentId),
+      _id: new mongoose.Types.ObjectId(`${studentId}`),
     };
 
     const student = await StudentsModel.findOne(filter);

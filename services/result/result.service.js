@@ -94,7 +94,12 @@ class ResultService {
     const sgpi = hasFailed
       ? 0
       : ResultUtils.roundUpToTwoDecimals(gpcTotal / creditsTotal);
-    const cgpi = hasFailed ? 0 : 0;
+    const cgpi = hasFailed
+      ? 0
+      : await this.calculateCGPIForStudent(marksByStudent.studentId, {
+          gpcTotal,
+          creditsTotal,
+        });
 
     const resultOfStudent = {
       student: marksByStudent.studentId,
@@ -120,6 +125,42 @@ class ResultService {
     });
 
     return { result };
+  }
+
+  async calculateCGPIForStudent(studentId, data) {
+    let { gpcTotal = 0, creditsTotal = 0 } = data;
+    const { student } = await studentDataLayer.findById(studentId);
+
+    for (const resultSemester in student.resultBySemesters) {
+      if (!student.resultBySemesters[resultSemester]) continue;
+
+      const { resultId } = student.resultBySemesters[resultSemester];
+
+      const { result } = await resultDataLayer.findById(resultId);
+
+      if (!result) continue;
+
+      const studentInResult = result.students.find(
+        (s) => `${s.student}` === `${studentId}`,
+      );
+
+      if (!studentInResult) continue;
+
+      if (
+        typeof studentInResult.gpcTotal === 'number' &&
+        !Number.isNaN(studentInResult.gpcTotal)
+      ) {
+        gpcTotal += studentInResult.gpcTotal;
+      }
+      if (
+        typeof studentInResult.creditsTotal === 'number' &&
+        !Number.isNaN(studentInResult.creditsTotal)
+      ) {
+        creditsTotal += studentInResult.creditsTotal;
+      }
+    }
+
+    return ResultUtils.roundUpToTwoDecimals(gpcTotal / creditsTotal);
   }
 
   async getResultsBy({ subjectGroupId }) {

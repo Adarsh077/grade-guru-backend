@@ -6,6 +6,7 @@ exports.create = celebrate({
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
+    isATKTSubjectGroup: Joi.bool().default(false),
   }),
 });
 

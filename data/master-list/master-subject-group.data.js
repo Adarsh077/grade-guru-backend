@@ -3,11 +3,12 @@ const { MasterListSubjectGroupModel } = require('../../models/master-list');
 
 class MasterSubjectGroupDataLayer {
   async create(data) {
-    const { name, semesterId } = data;
+    const { name, semesterId, isATKTSubjectGroup } = data;
 
     const subjectGroup = await MasterListSubjectGroupModel.create({
       name,
       semester: semesterId,
+      isATKTSubjectGroup,
     });
 
     return { subjectGroup };
@@ -51,7 +52,10 @@ class MasterSubjectGroupDataLayer {
     }
 
     const subjectGroup = await MasterListSubjectGroupModel.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(subjectGroupId), isDeleted: false },
+      {
+        _id: new mongoose.Types.ObjectId(`${subjectGroupId}`),
+        isDeleted: false,
+      },
       { $set: updateData },
       { new: true },
     );
