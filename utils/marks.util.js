@@ -58,7 +58,6 @@ const gradeByPercentage = (percentage) => {
 
 const gradeByMarksAndExam = (maxMarks, marksScored) => {
   if (!maxMarks) return '';
-
   const percantage = (marksScored / maxMarks) * 100;
 
   return gradeByPercentage(percantage);

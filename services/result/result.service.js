@@ -17,6 +17,7 @@ const {
 class ResultService {
   async generateResult(semesterId, subjectGroupId, marksByStudent) {
     const marks = [];
+    const labMarks = [];
     for (const marksBySubject of marksByStudent.subjects) {
       if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN) {
         const resultBySubject =
@@ -25,11 +26,12 @@ class ResultService {
       } else if (marksBySubject.subjectType === SubjectTypeEnum.LAB) {
         const resultBySubject =
           LabExamResult.generateLabExamResult(marksBySubject);
-        marks.push(resultBySubject);
+        labMarks.push(resultBySubject);
       }
     }
 
     let marksAfterGrace = ResultUtils.caculateGraceMarks(marks);
+    marksAfterGrace.push(...labMarks);
     marksAfterGrace = marksAfterGrace.map((subject) => ({
       ...subject,
       exams: subject.exams.map((exam) => ({

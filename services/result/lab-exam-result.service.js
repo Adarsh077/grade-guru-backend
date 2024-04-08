@@ -62,7 +62,6 @@ class LabExamResultService {
         maxMarksByExamName[ExamNamesEnum.PROR],
       TOTMarks,
     );
-
     if ([PRORGrade, TWGrade].includes('F')) {
       TOTGrade = 'F';
     }
