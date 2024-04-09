@@ -38,8 +38,8 @@ class MasterSubjectGroupDataLayer {
     const subjectGroup =
       await MasterListSubjectGroupModel.findById(subjectGroupId);
 
-    if (subjectGroup.isDeleted) {
-      return { subject: null };
+    if (!subjectGroup || subjectGroup.isDeleted) {
+      return { subjectGroup: null };
     }
 
     return { subjectGroup };

@@ -8,11 +8,10 @@ const {
 } = require('../data');
 const {
   masterSemesterDataLayer,
-  masterSubjectDataLayer,
   masterDepartmentDataLayer,
+  masterSubjectGroupDataLayer,
 } = require('../data/master-list');
 const { AppError } = require('../utils');
-const subjectService = require('./subject.service');
 const studentService = require('./student.service');
 const { StudentTypeEnum } = require('../enums');
 const subjectGroupService = require('./subject-group.service');
@@ -42,13 +41,14 @@ class SemesterService {
       number: masterSemester.number,
     });
 
-    const { subjects: masterSubjects } = await masterSubjectDataLayer.findAll({
-      semesterId: masterSemester._id,
-    });
+    const { subjectGroups: masterSubjectGroups } =
+      await masterSubjectGroupDataLayer.findAll({
+        semesterId: masterSemester._id,
+      });
 
-    for (const masterSubject of masterSubjects) {
-      await subjectService.createSubjectFromMasterSubject({
-        masterSubjectId: masterSubject._id,
+    for (const masterSubjectGroup of masterSubjectGroups) {
+      await subjectGroupService.createSubjectGroupFromMasterSubject({
+        masterSubjectId: masterSubjectGroup._id,
         semesterId: semester._id,
       });
     }

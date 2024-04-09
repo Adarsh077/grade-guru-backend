@@ -34,16 +34,18 @@ class SubjectService {
     return { subject };
   }
 
-  // TODO: Update master list services
-  async createSubjectFromMasterSubject({ masterSubjectId, semesterId }) {
+  async createSubjectFromMasterSubject({ masterSubjectId, subjectGroupId }) {
     const { subject: masterSubject } =
       await masterSubjectDataLayer.findById(masterSubjectId);
 
     const { subject } = await subjectDataLayer.create({
       name: masterSubject.name,
-      semesterId,
+      subjectGroupId,
       staffId: masterSubject.staff,
       code: masterSubject.code,
+      subjectType: masterSubject.subjectType,
+      credits: masterSubject.credits,
+      isATKTSubject: masterSubject.isATKTSubject,
     });
 
     return { subject };

@@ -4,8 +4,11 @@ const {
   studentDataLayer,
   subjectDataLayer,
 } = require('../data');
+const { masterSubjectDataLayer } = require('../data/master-list');
+const masterSubjectGroupData = require('../data/master-list/master-subject-group.data');
 const { AppError } = require('../utils');
 const resultService = require('./result/result.service');
+const subjectService = require('./subject.service');
 
 class SubjectGroupService {
   async create(data) {
@@ -16,6 +19,33 @@ class SubjectGroupService {
       isATKTSubjectGroup,
       semesterId,
     });
+
+    return { subjectGroup };
+  }
+
+  async createSubjectGroupFromMasterSubject({
+    masterSubjectGroupId,
+    semesterId,
+  }) {
+    const { subjectGroup: masterSubjectGroup } =
+      await masterSubjectGroupData.findById(masterSubjectGroupId);
+
+    const { subjectGroup } = await subjectGroupDataLayer.create({
+      name: masterSubjectGroup.name,
+      semesterId,
+      isATKTSubjectGroup: masterSubjectGroup.isATKTSubjectGroup,
+    });
+
+    const { subjects: masterSubjects } = await masterSubjectDataLayer.findAll({
+      subjectGroupId: masterSubjectGroup._id,
+    });
+
+    for (const masterSubject of masterSubjects) {
+      await subjectService.createSubjectFromMasterSubject({
+        masterSubjectId: masterSubject._id,
+        subjectGroupId: subjectGroup._id,
+      });
+    }
 
     return { subjectGroup };
   }

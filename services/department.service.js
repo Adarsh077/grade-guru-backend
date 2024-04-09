@@ -44,6 +44,7 @@ class DepartmentService {
     const { department } = await departmentDataLayer.create({
       name: masterDepartment.name,
       hod: masterDepartment.hod._id,
+      codeForSeatNo: masterDepartment.codeForSeatNo,
       batch: batch,
       ability,
     });

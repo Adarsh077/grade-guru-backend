@@ -3,12 +3,13 @@ const { masterDepartmentDataLayer } = require('../../data/master-list');
 
 class MasterDepartmentService {
   async create(data) {
-    const { name, hod, ability } = data;
+    const { name, hod, ability, codeForSeatNo } = data;
 
     const { department } = await masterDepartmentDataLayer.create({
       name,
       hod,
       ability,
+      codeForSeatNo,
     });
 
     return { department };

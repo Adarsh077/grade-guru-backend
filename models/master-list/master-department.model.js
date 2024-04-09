@@ -20,6 +20,10 @@ const MasterDepartmentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    codeForSeatNo: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true },
 );

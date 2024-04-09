@@ -5,7 +5,7 @@ const caslEnum = require('../../casl/casl.enum');
 
 class MasterDepartmentDataLayer {
   async create(data) {
-    const { name, hod, ability } = data;
+    const { name, hod, ability, codeForSeatNo } = data;
 
     if (
       !ability ||
@@ -20,6 +20,7 @@ class MasterDepartmentDataLayer {
     const department = await MasterListDepartmentModel.create({
       name,
       hod,
+      codeForSeatNo,
     });
 
     return { department };
