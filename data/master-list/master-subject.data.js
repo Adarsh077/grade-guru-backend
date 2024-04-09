@@ -3,8 +3,15 @@ const { MasterListSubjectModel } = require('../../models/master-list');
 
 class MasterSubjectDataLayer {
   async create(data) {
-    const { name, subjectGroupId, staffId, code, subjectType, isATKTSubject } =
-      data;
+    const {
+      name,
+      subjectGroupId,
+      staffId,
+      code,
+      subjectType,
+      isATKTSubject,
+      credits,
+    } = data;
 
     const subject = await MasterListSubjectModel.create({
       name,
@@ -13,6 +20,7 @@ class MasterSubjectDataLayer {
       code,
       subjectType,
       isATKTSubject,
+      credits,
     });
 
     return { subject };

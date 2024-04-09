@@ -48,7 +48,7 @@ class SemesterService {
 
     for (const masterSubjectGroup of masterSubjectGroups) {
       await subjectGroupService.createSubjectGroupFromMasterSubject({
-        masterSubjectId: masterSubjectGroup._id,
+        masterSubjectGroupId: masterSubjectGroup._id,
         semesterId: semester._id,
       });
     }
