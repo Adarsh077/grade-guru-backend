@@ -86,11 +86,21 @@ exports.enrollStudents = catchAsync(async (req, res) => {
 exports.generateResultBy = catchAsync(async (req, res) => {
   const { subjectGroupId } = req.params;
 
-  const { marksByStudents } =
-    await subjectGroupService.generateResultBy(subjectGroupId);
+  const { subjectGroup } = await subjectGroupService.findById(subjectGroupId);
+
+  let marks = null;
+  if (subjectGroup.isATKTSubjectGroup) {
+    const { marksByStudents } =
+      await subjectGroupService.generateATKTResultBy(subjectGroupId);
+    marks = marksByStudents;
+  } else {
+    const { marksByStudents } =
+      await subjectGroupService.generateResultBy(subjectGroupId);
+    marks = marksByStudents;
+  }
 
   res.send({
     status: 'success',
-    body: { marksByStudents },
+    body: { marks },
   });
 });

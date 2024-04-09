@@ -2,6 +2,7 @@ const {
   SubjectTypeEnum,
   FinalResultEnum,
   ResultBySemesterStatusEnum,
+  ExamNamesEnum,
 } = require('../../enums');
 const WrittenExamResult = require('./written-exam-result.service');
 const LabExamResult = require('./lab-exam-result.service');
@@ -64,6 +65,9 @@ class ResultService {
     for (const marksBySubject of marksAfterGrace) {
       if (!isFailedInAtleast1Exam) continue;
       marksBySubject.exams = marksBySubject.exams.map((exam) => {
+        const failedInOneExam = marksBySubject.exams.find(
+          (e) => e.symbols && e.symbols.includes('F'),
+        );
         if (
           exam.symbols &&
           (exam.symbols.includes('F') ||
@@ -74,7 +78,10 @@ class ResultService {
         }
         return {
           ...exam,
-          symbols: [...(exam.symbols || []), 'E'],
+          symbols: [
+            ...(exam.symbols || []),
+            exam.examName === ExamNamesEnum.TOT && failedInOneExam ? 'F' : 'E',
+          ],
         };
       });
     }

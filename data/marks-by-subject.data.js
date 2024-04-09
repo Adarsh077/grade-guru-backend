@@ -22,7 +22,7 @@ class MarksBySubjectDataLayer {
       }
 
       marksBySubject.marks = marksBySubject.marks.filter((marks) =>
-        studentIds.includes(`${marks.student}`),
+        studentIds.map((s) => `${s}`).includes(`${marks.student}`),
       );
 
       await marksBySubject.save();
@@ -168,7 +168,7 @@ class MarksBySubjectDataLayer {
   }
 
   async findBy(data) {
-    const { subjectId, subjectIds } = data;
+    const { subjectId, subjectIds, studentId } = data;
 
     const filter = {};
     if (subjectId) {
@@ -176,6 +176,9 @@ class MarksBySubjectDataLayer {
     }
     if (subjectIds) {
       filter.subject = { $in: subjectIds };
+    }
+    if (studentId) {
+      filter['marks.student'] = new mongoose.Types.ObjectId(`${studentId}`);
     }
 
     const marksBySubjects = await MarksBySubjectModel.find(filter)

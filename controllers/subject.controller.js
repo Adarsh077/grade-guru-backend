@@ -145,11 +145,18 @@ exports.updateById = catchAsync(async (req, res) => {
 
 exports.enrollStudent = catchAsync(async (req, res) => {
   const { subjectId } = req.params;
-  const { studentId } = req.body;
+  const { students } = req.body;
 
   const { marksBySubject } = await subjectService.enrollStudent(subjectId, {
-    studentId,
+    students,
   });
+
+  const { subject } = await subjectService.findById(subjectId);
+  const { subjectGroup } = await subjectGroupService.findById(
+    subject.subjectGroup,
+  );
+
+  await semesterService.generateSeatNoForStudents(subjectGroup.semester);
 
   res.send({
     status: 'success',

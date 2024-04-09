@@ -3,9 +3,12 @@ const {
   marksBySubjectDataLayer,
   studentDataLayer,
   subjectDataLayer,
+  semesterDataLayer,
+  resultDataLayer,
 } = require('../data');
 const { masterSubjectDataLayer } = require('../data/master-list');
 const masterSubjectGroupData = require('../data/master-list/master-subject-group.data');
+const { ExamNamesEnum } = require('../enums');
 const { AppError } = require('../utils');
 const resultService = require('./result/result.service');
 const subjectService = require('./subject.service');
@@ -135,7 +138,7 @@ class SubjectGroupService {
         await marksBySubjectDataLayer.getMarksBySubjectId({
           subjectId: subject._id,
         });
-
+      if (!marksBySubject) continue;
       for (const marks of marksBySubject.marks) {
         const isAlreadyPushed = students.find(
           (student) => `${student.studentId}` === `${marks.student._id}`,
@@ -177,6 +180,88 @@ class SubjectGroupService {
       };
 
       for (const marksBySubject of marksBySubjects) {
+        const marksOfStudentBySubject = marksBySubject.marks.find(
+          (marks) => `${marks.student._id}` === `${student.studentId}`,
+        );
+
+        marksByStudent.subjects.push({
+          ...JSON.parse(JSON.stringify(marksBySubject.subject)),
+          exams: marksOfStudentBySubject.exams,
+        });
+      }
+
+      marksByStudents.push(marksByStudent);
+    }
+
+    for (const marksByStudent of marksByStudents) {
+      await resultService.generateResult(
+        subjectGroup.semester,
+        subjectGroup._id,
+        marksByStudent,
+      );
+    }
+
+    return { marksByStudents };
+  }
+
+  async generateATKTResultBy(subjectGroupId) {
+    const { subjectGroup } = await this.findById(subjectGroupId);
+    const { semester } = await semesterDataLayer.findById(
+      subjectGroup.semester,
+    );
+
+    const { students } = await this.enrolledStudentList(subjectGroupId);
+
+    const marksByStudents = [];
+
+    for (const student of students) {
+      const marksByStudent = {
+        ...student,
+        subjects: [],
+      };
+
+      const { subjects } = await subjectDataLayer.findAll({
+        subjectGroupId: subjectGroupId,
+      });
+
+      const { marksBySubjects: atktMarksBySubjects } =
+        await marksBySubjectDataLayer.findBy({
+          subjectIds: subjects.map((subject) => subject._id),
+          studentId: student.studentId,
+        });
+
+      const { student: fullStudent } = await studentDataLayer.findById(
+        student.studentId,
+      );
+      const resultBySemester =
+        fullStudent.resultBySemesters[`semester${semester.number}`];
+
+      const { result: resultOfStudents } = await resultDataLayer.findById(
+        resultBySemester.resultId,
+      );
+
+      const resultOfStudent = resultOfStudents.students.find(
+        (r) => `${r.student}` === `${student.studentId}`,
+      );
+
+      const exemptedSubjects = resultOfStudent.marks.filter((m) =>
+        m.exams.find(
+          (e) => e.examName === ExamNamesEnum.TOT && e.symbols.includes('E'),
+        ),
+      );
+
+      const { marksBySubjects: exemptedMarksBySubjects } =
+        await marksBySubjectDataLayer.findBy({
+          subjectIds: exemptedSubjects.map(
+            (exemptedSubject) => exemptedSubject.subject,
+          ),
+          studentId: student.studentId,
+        });
+
+      for (const marksBySubject of [
+        ...atktMarksBySubjects,
+        ...exemptedMarksBySubjects,
+      ]) {
         const marksOfStudentBySubject = marksBySubject.marks.find(
           (marks) => `${marks.student._id}` === `${student.studentId}`,
         );

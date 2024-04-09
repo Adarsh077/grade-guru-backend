@@ -37,7 +37,7 @@ class SubjectGroupDataLayer {
   async findById(subjectGroupId) {
     const subjectGroup = await SubjectGroupModel.findById(subjectGroupId);
 
-    if (subjectGroup.isDeleted) {
+    if (!subjectGroup || subjectGroup.isDeleted) {
       return { subjectGroup: null };
     }
 

@@ -18,9 +18,7 @@ router
   .delete(subjectValidator.deleteById, subjectController.deleteById)
   .patch(subjectValidator.updateById, subjectController.updateById);
 
-router
-  .route('/:subjectId/students')
-  .post(subjectValidator.enrollStudent, subjectController.enrollStudent);
+router.route('/:subjectId/students').post(subjectController.enrollStudent);
 
 router
   .route('/:subjectId/atkt-students')

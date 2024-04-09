@@ -85,10 +85,14 @@ class SubjectService {
     return { subject };
   }
 
-  async enrollStudent(subjectId, { studentId }) {
+  async enrollStudent(subjectId, { students: studentNames }) {
+    const { students } = await studentDataLayer.find({
+      names: studentNames,
+    });
+
     const { marksBySubject } =
       await marksBySubjectDataLayer.createMarksEntryForEnrolledStudents({
-        studentIds: [studentId],
+        studentIds: students.map((student) => student._id),
         subjectId,
       });
 
@@ -142,6 +146,7 @@ class SubjectService {
       await studentDataLayer.findStudentsWithATKT(semester.number);
 
     const students = [];
+
     for (const student of studentsWithATKT) {
       const resultBySemester =
         student.resultBySemesters[`semester${semester.number}`];
