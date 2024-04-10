@@ -23,7 +23,8 @@ router
   .post(
     subjectGroupValidator.enrollStudents,
     subjectGroupController.enrollStudents,
-  );
+  )
+  .get(subjectGroupController.enrolledStudentList);
 
 router
   .route('/:subjectGroupId/result')

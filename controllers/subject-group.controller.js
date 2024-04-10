@@ -83,6 +83,18 @@ exports.enrollStudents = catchAsync(async (req, res) => {
   });
 });
 
+exports.enrolledStudentList = catchAsync(async (req, res) => {
+  const { subjectGroupId } = req.params;
+  console.log(subjectGroupId);
+  const { students } =
+    await subjectGroupService.enrolledStudentList(subjectGroupId);
+
+  res.send({
+    status: 'success',
+    body: { students },
+  });
+});
+
 exports.generateResultBy = catchAsync(async (req, res) => {
   const { subjectGroupId } = req.params;
 
