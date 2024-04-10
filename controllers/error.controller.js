@@ -24,9 +24,8 @@ const handleCelebrateError = (err) => {
       if (joiErr.path.length === 1) {
         errors[joiErr.context.key] = `${joiErr.context.key} ${joiErr.message}`;
       } else {
-        errors[
-          joiErr.path.join('.')
-        ] = `${joiErr.context.key} ${joiErr.message}`;
+        errors[joiErr.path.join('.')] =
+          `${joiErr.context.key} ${joiErr.message}`;
       }
     });
   }

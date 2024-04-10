@@ -2,7 +2,8 @@ const { studentService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { name, email, studentType, admissionYear, departmentId } = req.body;
+  const { name, email, studentType, admissionYear, departmentId, gender } =
+    req.body;
 
   const { student } = await studentService.create({
     name,
@@ -10,6 +11,7 @@ exports.create = catchAsync(async (req, res) => {
     studentType,
     admissionYear,
     departmentId,
+    gender,
   });
 
   res.send({

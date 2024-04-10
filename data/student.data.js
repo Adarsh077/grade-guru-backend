@@ -4,7 +4,8 @@ const { ResultBySemesterStatusEnum } = require('../enums');
 
 class StudentDataLayer {
   async create(data) {
-    const { name, email, studentType, admissionYear, departmentId } = data;
+    const { name, email, studentType, admissionYear, departmentId, gender } =
+      data;
 
     const student = await StudentsModel.create({
       name,
@@ -12,6 +13,7 @@ class StudentDataLayer {
       studentType,
       admissionYear,
       department: departmentId,
+      gender,
     });
 
     return { student };

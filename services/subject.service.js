@@ -19,6 +19,7 @@ class SubjectService {
       credits,
       subjectType,
       isATKTSubject,
+      gender,
     } = data;
 
     const { subject } = await subjectDataLayer.create({
@@ -29,6 +30,7 @@ class SubjectService {
       credits,
       subjectType,
       isATKTSubject,
+      gender,
     });
 
     return { subject };

@@ -1,10 +1,13 @@
-const { StudentTypeEnum } = require('../enums');
+const { StudentTypeEnum, StudentGenderEnum } = require('../enums');
 const { celebrate, Joi, Segments } = require('../utils/celebrate');
 
 exports.create = celebrate({
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
+    gender: Joi.string()
+      .valid(...Object.values(StudentGenderEnum))
+      .required(),
     studentType: Joi.string()
       .valid(...Object.values(StudentTypeEnum))
       .required(),

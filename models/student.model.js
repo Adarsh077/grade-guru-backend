@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
-const { StudentTypeEnum, ResultBySemesterStatusEnum } = require('../enums');
+const {
+  StudentTypeEnum,
+  ResultBySemesterStatusEnum,
+  StudentGenderEnum,
+} = require('../enums');
 
 const ResultBySemesterSchema = new mongoose.Schema(
   {
@@ -48,6 +52,11 @@ const StudentSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    gender: {
+      type: String,
+      enum: Object.values(StudentGenderEnum),
+      required: true,
     },
     resultBySemesters: {
       semester2: {

@@ -29,6 +29,11 @@ const StudentTypeEnum = {
   DSE: 'DSE',
 };
 
+const StudentGenderEnum = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+};
+
 const FinalResultEnum = {
   P: 'P',
   F: 'F',
@@ -48,4 +53,5 @@ module.exports = {
   ExamsBySubjectType,
   FinalResultEnum,
   ResultBySemesterStatusEnum,
+  StudentGenderEnum,
 };

@@ -90,11 +90,13 @@ class SemesterService {
     return { semester };
   }
 
-  async findRegisteredStudents(semesterId) {
+  async findRegisteredStudents(semesterId, { batch }) {
     const { semester } = await semesterDataLayer.findById(semesterId);
 
+    batch = batch.year || new Date().getFullYear();
+
     const persuingYearBySemester = Math.ceil(semester.number / 2);
-    const regularBatchYear = new Date().getFullYear() - persuingYearBySemester;
+    const regularBatchYear = batch - persuingYearBySemester;
     const dseBatchYear = regularBatchYear + 1;
 
     const { department } = await departmentDataLayer.findById(

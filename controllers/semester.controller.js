@@ -1,4 +1,4 @@
-const { semesterService } = require('../services');
+const { semesterService, batchService } = require('../services');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
@@ -80,8 +80,14 @@ exports.updateById = catchAsync(async (req, res) => {
 
 exports.findRegisteredStudents = catchAsync(async (req, res) => {
   const { semesterId } = req.params;
+  const { batch: batchName } = req.query;
 
-  const { students } = await semesterService.findRegisteredStudents(semesterId);
+  const { batch } = await batchService.findOne({ name: batchName });
+
+  const { students } = await semesterService.findRegisteredStudents(
+    semesterId,
+    { batch },
+  );
 
   res.send({
     status: 'success',

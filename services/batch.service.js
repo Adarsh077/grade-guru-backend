@@ -31,6 +31,12 @@ class BatchService {
 
     return { batches };
   }
+
+  async findOne({ name }) {
+    const { batch } = await batchDataLayer.findOne({ name });
+
+    return { batch };
+  }
 }
 
 module.exports = new BatchService();

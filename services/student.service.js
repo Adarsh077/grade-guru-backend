@@ -2,7 +2,8 @@ const { studentDataLayer } = require('../data');
 
 class StudentService {
   async create(data) {
-    const { name, email, studentType, admissionYear, departmentId } = data;
+    const { name, email, studentType, admissionYear, departmentId, gender } =
+      data;
 
     const { student } = await studentDataLayer.create({
       name,
@@ -10,6 +11,7 @@ class StudentService {
       studentType,
       admissionYear,
       departmentId,
+      gender,
     });
 
     return { student };
