@@ -26,7 +26,7 @@ class SubjectDataLayer {
     return { subject };
   }
 
-  async findAll({ subjectGroupId, staffId, subjectGroupIds }) {
+  async findAll({ subjectGroupId, staffId, subjectGroupIds, subjectIds }) {
     const filter = {
       isDeleted: false,
     };
@@ -42,6 +42,12 @@ class SubjectDataLayer {
     ) {
       filter.subjectGroup = {
         $in: subjectGroupIds.map((id) => new mongoose.Types.ObjectId(id)),
+      };
+    }
+
+    if (subjectIds && Array.isArray(subjectIds) && subjectIds.length) {
+      filter._id = {
+        $in: subjectIds.map((id) => new mongoose.Types.ObjectId(id)),
       };
     }
 

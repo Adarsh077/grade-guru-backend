@@ -85,7 +85,7 @@ exports.enrollStudents = catchAsync(async (req, res) => {
 
 exports.enrolledStudentList = catchAsync(async (req, res) => {
   const { subjectGroupId } = req.params;
-  console.log(subjectGroupId);
+
   const { students } =
     await subjectGroupService.enrolledStudentList(subjectGroupId);
 
@@ -114,5 +114,17 @@ exports.generateResultBy = catchAsync(async (req, res) => {
   res.send({
     status: 'success',
     body: { marks },
+  });
+});
+
+exports.sendRevaluationReminder = catchAsync(async (req, res) => {
+  const { subjectGroupId } = req.params;
+
+  await subjectGroupService.sendRevaluationReminder({
+    subjectGroupId,
+  });
+
+  res.send({
+    status: 'success',
   });
 });

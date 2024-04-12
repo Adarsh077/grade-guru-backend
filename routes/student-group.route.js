@@ -31,4 +31,8 @@ router
   .post(subjectGroupController.generateResultBy)
   .get(resultController.getResultsBy);
 
+router
+  .route('/:subjectGroupId/reminder/revalution')
+  .post(subjectGroupController.sendRevaluationReminder);
+
 module.exports = router;

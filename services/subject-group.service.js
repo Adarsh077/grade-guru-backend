@@ -10,8 +10,10 @@ const { masterSubjectDataLayer } = require('../data/master-list');
 const masterSubjectGroupData = require('../data/master-list/master-subject-group.data');
 const { ExamNamesEnum } = require('../enums');
 const { AppError } = require('../utils');
+const emailService = require('./email.service');
 const resultService = require('./result/result.service');
 const subjectService = require('./subject.service');
+const RevaluationReminderEmail = require('../emails/revalution-reminder-email');
 
 class SubjectGroupService {
   async create(data) {
@@ -284,6 +286,44 @@ class SubjectGroupService {
     }
 
     return { marksByStudents };
+  }
+
+  async sendRevaluationReminder({ subjectGroupId }) {
+    const { result } = await resultDataLayer.getResultsBy({ subjectGroupId });
+
+    if (!result) {
+      throw new AppError({ message: 'Please Generate result first' });
+    }
+
+    const failedStudents = result.students.filter((student) => !student.cgpi);
+
+    const failedStudentsWithSubjects = [];
+
+    for (const failedStudent of failedStudents) {
+      const failedSubjects = failedStudent.marks.filter((marksBySubject) =>
+        marksBySubject.exams.find((exam) => exam.symbols.includes('F')),
+      );
+      const { subjects } = await subjectDataLayer.findAll({
+        subjectIds: failedSubjects.map((subject) => subject.subject),
+      });
+      failedStudentsWithSubjects.push({
+        email: failedStudent.student.email,
+        name: failedStudent.student.name,
+        subjects: subjects.map((subject) => subject.name).join(', '),
+      });
+    }
+
+    for (const failedStudentWithSubjects of failedStudentsWithSubjects) {
+      emailService.sendEmail({
+        to: failedStudentWithSubjects.email,
+        subject: `IMPORTANT! Revaluation form submissions.`,
+        html: RevaluationReminderEmail({
+          lastDate: '20 April',
+          name: failedStudentWithSubjects.name,
+          subject: failedStudentWithSubjects.subjects,
+        }),
+      });
+    }
   }
 }
 
