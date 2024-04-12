@@ -190,9 +190,9 @@ exports.findATKTStudents = catchAsync(async (req, res) => {
 
 exports.sendATKTFormReminder = catchAsync(async (req, res) => {
   const { subjectId } = req.params;
-
+  const { date } = req.body;
   await subjectService.sendATKTFormReminder(subjectId, {
-    lastDate: '20 April 2024',
+    lastDate: date,
   });
 
   res.send({
