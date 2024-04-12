@@ -42,4 +42,8 @@ router
     marksBySubjectController.getMarksBySubjectId,
   );
 
+router
+  .route('/:subjectId/reminder/atkt')
+  .post(subjectController.sendATKTFormReminder);
+
 module.exports = router;

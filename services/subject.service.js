@@ -8,6 +8,8 @@ const {
 } = require('../data');
 const { masterSubjectDataLayer } = require('../data/master-list');
 const { AppError } = require('../utils');
+const emailService = require('./email.service');
+const AtktReminderEmail = require('../emails/atkt-reminder-email');
 
 class SubjectService {
   async create(data) {
@@ -174,12 +176,32 @@ class SubjectService {
 
       if (hasFailed) {
         students.push({
+          _id: student._id,
           name: student.name,
         });
       }
     }
 
     return { students };
+  }
+
+  async sendATKTFormReminder(subjectId, { lastDate = '20 April 2024' }) {
+    const { students } = await this.findATKTStudents(subjectId);
+    const { subject } = await subjectDataLayer.findById(subjectId);
+    for (const student of students) {
+      const { student: studentDetails } = await studentDataLayer.findById(
+        student._id,
+      );
+      emailService.sendEmail({
+        to: studentDetails.email,
+        subject: `IMPORTANT! ATKT form submissions.`,
+        html: AtktReminderEmail({
+          lastDate: lastDate,
+          name: studentDetails.name,
+          subject: subject.name,
+        }),
+      });
+    }
   }
 }
 

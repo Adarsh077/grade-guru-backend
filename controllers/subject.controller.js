@@ -187,3 +187,15 @@ exports.findATKTStudents = catchAsync(async (req, res) => {
     body: { students },
   });
 });
+
+exports.sendATKTFormReminder = catchAsync(async (req, res) => {
+  const { subjectId } = req.params;
+
+  await subjectService.sendATKTFormReminder(subjectId, {
+    lastDate: '20 April 2024',
+  });
+
+  res.send({
+    status: 'success',
+  });
+});
