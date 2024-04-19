@@ -2,13 +2,12 @@ const { masterDepartmentService } = require('../../services/master-list');
 const { catchAsync } = require('../../utils');
 
 exports.create = catchAsync(async (req, res) => {
-  const { name, hod, codeForSeatNo } = req.body;
+  const { name, hod } = req.body;
 
   const { department } = await masterDepartmentService.create({
     name,
     hod,
     ability: req.user.ability,
-    codeForSeatNo,
   });
 
   res.send({
@@ -33,7 +32,6 @@ exports.deleteById = catchAsync(async (req, res) => {
 });
 
 exports.findAll = catchAsync(async (req, res) => {
-  console.log(JSON.stringify(req.headers, null, 2));
   const { departments } = await masterDepartmentService.findAll({
     ability: req.user.ability,
   });

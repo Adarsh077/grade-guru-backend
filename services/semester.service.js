@@ -98,7 +98,7 @@ class SemesterService {
     const persuingYearBySemester = Math.ceil(semester.number / 2);
     const regularBatchYear = batch - persuingYearBySemester;
     const dseBatchYear = regularBatchYear + 1;
-    console.log({ regularBatchYear, dseBatchYear });
+
     const { department } = await departmentDataLayer.findById(
       semester.department,
     );

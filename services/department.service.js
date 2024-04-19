@@ -21,9 +21,11 @@ class DepartmentService {
         .map((department) => department.codeForSeatNo || 0)
         .filter((codeForSeatNo) => codeForSeatNo),
     );
+
     if (maxCodeForSeatNo === -Infinity) {
       maxCodeForSeatNo = 0;
     }
+
     const { department } = await departmentDataLayer.create({
       name,
       hod,

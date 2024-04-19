@@ -6,7 +6,7 @@ const { departmentValidator, semesterValidator } = require('../validators');
 router
   .route('/')
   .get(departmentValidator.findAll, departmentController.findAll)
-  .post(departmentValidator.create, departmentController.create);
+  .post(departmentController.create);
 
 router
   .route('/:departmentId')

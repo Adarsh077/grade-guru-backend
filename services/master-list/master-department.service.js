@@ -3,13 +3,27 @@ const { masterDepartmentDataLayer } = require('../../data/master-list');
 
 class MasterDepartmentService {
   async create(data) {
-    const { name, hod, ability, codeForSeatNo } = data;
+    const { name, hod, ability } = data;
+
+    const { departments } = await masterDepartmentDataLayer.findAll({
+      ability: ability,
+    });
+
+    let maxCodeForSeatNo = Math.max(
+      ...departments
+        .map((department) => department.codeForSeatNo || 0)
+        .filter((codeForSeatNo) => codeForSeatNo),
+    );
+
+    if (maxCodeForSeatNo === -Infinity) {
+      maxCodeForSeatNo = 0;
+    }
 
     const { department } = await masterDepartmentDataLayer.create({
       name,
       hod,
       ability,
-      codeForSeatNo,
+      codeForSeatNo: maxCodeForSeatNo + 1,
     });
 
     return { department };
