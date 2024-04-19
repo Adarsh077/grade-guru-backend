@@ -33,6 +33,7 @@ exports.deleteById = catchAsync(async (req, res) => {
 });
 
 exports.findAll = catchAsync(async (req, res) => {
+  console.log(JSON.stringify(req.headers, null, 2));
   const { departments } = await masterDepartmentService.findAll({
     ability: req.user.ability,
   });
