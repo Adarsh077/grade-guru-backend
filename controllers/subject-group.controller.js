@@ -119,9 +119,11 @@ exports.generateResultBy = catchAsync(async (req, res) => {
 
 exports.sendRevaluationReminder = catchAsync(async (req, res) => {
   const { subjectGroupId } = req.params;
+  const { date } = req.body;
 
   await subjectGroupService.sendRevaluationReminder({
     subjectGroupId,
+    date,
   });
 
   res.send({

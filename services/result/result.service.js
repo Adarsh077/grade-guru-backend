@@ -70,9 +70,7 @@ class ResultService {
         );
         if (
           exam.symbols &&
-          (exam.symbols.includes('F') ||
-            exam.symbols.includes('E') ||
-            exam.symbols.includes('#'))
+          (exam.symbols.includes('F') || exam.symbols.includes('E'))
         ) {
           return exam;
         }

@@ -288,7 +288,7 @@ class SubjectGroupService {
     return { marksByStudents };
   }
 
-  async sendRevaluationReminder({ subjectGroupId }) {
+  async sendRevaluationReminder({ subjectGroupId, date }) {
     const { result } = await resultDataLayer.getResultsBy({ subjectGroupId });
 
     if (!result) {
@@ -318,7 +318,7 @@ class SubjectGroupService {
         to: failedStudentWithSubjects.email,
         subject: `IMPORTANT! Revaluation form submissions.`,
         html: RevaluationReminderEmail({
-          lastDate: '20 April',
+          lastDate: date,
           name: failedStudentWithSubjects.name,
           subject: failedStudentWithSubjects.subjects,
         }),
