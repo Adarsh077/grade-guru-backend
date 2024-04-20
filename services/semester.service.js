@@ -15,6 +15,7 @@ const {
 const { AppError } = require('../utils');
 const studentService = require('./student.service');
 const subjectGroupService = require('./subject-group.service');
+const { StudentStatusEnum } = require('../enums');
 
 class SemesterService {
   async create(data) {
@@ -104,6 +105,7 @@ class SemesterService {
 
     const { students } = await studentService.findEligibleStudent({
       department: new mongoose.Types.ObjectId(`${masterDepartment._id}`),
+      status: { $in: [StudentStatusEnum.PASS, StudentStatusEnum.ATKT] },
       [`resultBySemesters.semester${semester.number - 1}`]: {
         $exists: true,
         $ne: null,
