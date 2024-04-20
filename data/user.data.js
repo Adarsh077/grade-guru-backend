@@ -2,9 +2,9 @@ const { UserModel } = require('../models');
 
 class UserDataLayer {
   async createUser(data) {
-    const { name, email, password } = data;
+    const { name, email, password, role } = data;
 
-    const user = await UserModel.create({ name, email, password });
+    const user = await UserModel.create({ name, email, password, role });
 
     return { user };
   }

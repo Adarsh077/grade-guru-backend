@@ -81,6 +81,7 @@ class UserService {
       name,
       email,
       password: hashedPassword,
+      role,
     });
 
     await this.updateUserAbilities({ role, userId: user._id });
