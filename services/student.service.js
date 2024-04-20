@@ -25,12 +25,18 @@ class StudentService {
 
   async find(data) {
     const { admissionYear, departmentId, studentType } = data;
-
     const { students } = await studentDataLayer.find({
       admissionYear,
       departmentId,
       studentType,
     });
+
+    return { students };
+  }
+
+  async findEligibleStudent(data) {
+    console.log(JSON.stringify(data, null, 2));
+    const { students } = await studentDataLayer.findEligibleStudent(data);
 
     return { students };
   }

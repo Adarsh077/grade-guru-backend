@@ -45,6 +45,11 @@ const ResultBySemesterStatusEnum = {
   ATKT: 'ATKT',
   DROP: 'DROP',
 };
+const StudentStatusEnum = {
+  PASS: 'PASS',
+  ATKT: 'ATKT',
+  DROP: 'DROP',
+};
 
 module.exports = {
   ExamNamesEnum,
@@ -54,4 +59,5 @@ module.exports = {
   FinalResultEnum,
   ResultBySemesterStatusEnum,
   StudentGenderEnum,
+  StudentStatusEnum,
 };

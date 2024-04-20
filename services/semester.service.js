@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const {
   semesterDataLayer,
   subjectGroupDataLayer,
@@ -13,7 +14,6 @@ const {
 } = require('../data/master-list');
 const { AppError } = require('../utils');
 const studentService = require('./student.service');
-const { StudentTypeEnum } = require('../enums');
 const subjectGroupService = require('./subject-group.service');
 
 class SemesterService {
@@ -90,14 +90,8 @@ class SemesterService {
     return { semester };
   }
 
-  async findRegisteredStudents(semesterId, { batch }) {
+  async findRegisteredStudents(semesterId) {
     const { semester } = await semesterDataLayer.findById(semesterId);
-
-    batch = batch.year || new Date().getFullYear();
-
-    const persuingYearBySemester = Math.ceil(semester.number / 2);
-    const regularBatchYear = batch - persuingYearBySemester;
-    const dseBatchYear = regularBatchYear + 1;
 
     const { department } = await departmentDataLayer.findById(
       semester.department,
@@ -108,22 +102,25 @@ class SemesterService {
         name: department.name,
       });
 
-    const { students: regularStudents } = await studentService.find({
-      admissionYear: regularBatchYear,
-      departmentId: masterDepartment._id,
-      studentType: StudentTypeEnum.REGULAR,
+    const { students } = await studentService.findEligibleStudent({
+      department: new mongoose.Types.ObjectId(`${masterDepartment._id}`),
+      [`resultBySemesters.semester${semester.number - 1}`]: {
+        $exists: true,
+        $ne: null,
+      },
+      $or: [
+        {
+          [`resultBySemesters.semester${semester.number + 1}`]: {
+            $exists: false,
+          },
+        },
+        {
+          [`resultBySemesters.semester${semester.number + 1}`]: {
+            $eq: null,
+          },
+        },
+      ],
     });
-
-    const { students: dseStudents } = await studentService.find({
-      admissionYear: dseBatchYear,
-      departmentId: masterDepartment._id,
-      studentType: StudentTypeEnum.DSE,
-    });
-
-    const students = [
-      ...regularStudents.map((student) => ({ name: student.name })),
-      ...dseStudents.map((student) => ({ name: student.name })),
-    ];
 
     return { students };
   }

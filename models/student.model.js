@@ -3,6 +3,7 @@ const {
   StudentTypeEnum,
   ResultBySemesterStatusEnum,
   StudentGenderEnum,
+  StudentStatusEnum,
 } = require('../enums');
 
 const ResultBySemesterSchema = new mongoose.Schema(
@@ -57,6 +58,11 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(StudentGenderEnum),
       required: true,
+    },
+    status: {
+      type: String,
+      enum: Object.values(StudentStatusEnum),
+      default: StudentStatusEnum.PASS,
     },
     resultBySemesters: {
       semester2: {

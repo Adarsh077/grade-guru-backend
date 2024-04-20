@@ -42,6 +42,12 @@ class StudentDataLayer {
     return { students };
   }
 
+  async findEligibleStudent(data) {
+    const students = await StudentsModel.find(data);
+
+    return { students };
+  }
+
   async findById(studentId) {
     const filter = {
       isDeleted: false,
