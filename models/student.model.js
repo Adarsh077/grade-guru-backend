@@ -11,11 +11,9 @@ const ResultBySemesterSchema = new mongoose.Schema(
     resultId: {
       type: mongoose.Types.ObjectId,
       ref: 'semesters',
-      required: true,
     },
     status: {
       type: String,
-      required: true,
       enum: ResultBySemesterStatusEnum,
     },
     batch: {
