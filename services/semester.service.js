@@ -103,14 +103,20 @@ class SemesterService {
         name: department.name,
       });
 
-    const { students } = await studentService.findEligibleStudent({
+    const filter = {
       department: new mongoose.Types.ObjectId(`${masterDepartment._id}`),
       status: { $in: [StudentStatusEnum.PASS, StudentStatusEnum.ATKT] },
-      [`resultBySemesters.semester${semester.number - 1}`]: {
+    };
+
+    if (semester.number > 3) {
+      filter[`resultBySemesters.semester${semester.number - 1}`] = {
         $exists: true,
         $ne: null,
-      },
-      $or: [
+      };
+    }
+
+    if (semester.number + 1 < 6) {
+      filter.$or = [
         {
           [`resultBySemesters.semester${semester.number + 1}`]: {
             $exists: false,
@@ -121,8 +127,10 @@ class SemesterService {
             $eq: null,
           },
         },
-      ],
-    });
+      ];
+    }
+
+    const { students } = await studentService.findEligibleStudent(filter);
 
     return { students };
   }
