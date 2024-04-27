@@ -32,10 +32,11 @@ exports.delete = catchAsync(async (req, res) => {
 });
 
 exports.find = catchAsync(async (req, res) => {
-  const { admissionYear } = req.query;
+  const { admissionYear, departmentId } = req.query;
 
   const { students } = await studentService.find({
     admissionYear,
+    departmentId,
   });
 
   res.send({

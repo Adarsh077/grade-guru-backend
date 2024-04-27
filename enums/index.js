@@ -11,6 +11,7 @@ const ExamNamesEnum = {
 };
 
 const SubjectTypeEnum = {
+  WRITTEN_TW: 'WRITTEN_TW',
   WRITTEN: 'WRITTEN',
   LAB: 'LAB',
 };
@@ -19,6 +20,12 @@ const ExamsBySubjectType = {
   [SubjectTypeEnum.WRITTEN]: [
     ExamNamesEnum.IAT1,
     ExamNamesEnum.IAT2,
+    ExamNamesEnum.ESE,
+  ],
+  [SubjectTypeEnum.WRITTEN_TW]: [
+    ExamNamesEnum.IAT1,
+    ExamNamesEnum.IAT2,
+    ExamNamesEnum.TW,
     ExamNamesEnum.ESE,
   ],
   [SubjectTypeEnum.LAB]: [ExamNamesEnum.PROR, ExamNamesEnum.TW],

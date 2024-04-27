@@ -5,8 +5,6 @@ const MarksBySubjectSchema = new mongoose.Schema(
   {
     subject: { type: mongoose.Types.ObjectId, required: true, ref: 'subjects' },
     subjectCode: { type: String, required: true },
-    credits: { type: Number, required: true },
-    gpc: { type: Number, required: true },
     exams: [
       {
         examName: {
@@ -20,7 +18,6 @@ const MarksBySubjectSchema = new mongoose.Schema(
         },
         grade: {
           type: String,
-          required: true,
         },
         graceMarks: {
           type: Number,
@@ -34,6 +31,8 @@ const MarksBySubjectSchema = new mongoose.Schema(
           type: [String],
           default: [],
         },
+        credits: { type: Number },
+        gpc: { type: Number },
       },
     ],
   },

@@ -20,7 +20,11 @@ class ResultService {
     const marks = [];
     const labMarks = [];
     for (const marksBySubject of marksByStudent.subjects) {
-      if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN) {
+      if (
+        [SubjectTypeEnum.WRITTEN, SubjectTypeEnum.WRITTEN_TW].includes(
+          marksBySubject.subjectType,
+        )
+      ) {
         const resultBySubject =
           await WrittenExamResult.generateWrittenExamResult(marksBySubject);
         marks.push(resultBySubject);
@@ -44,7 +48,11 @@ class ResultService {
     }));
 
     marksAfterGrace = marksAfterGrace.map((marksBySubject) => {
-      if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN) {
+      if (
+        [SubjectTypeEnum.WRITTEN, SubjectTypeEnum.WRITTEN_TW].includes(
+          marksBySubject.subjectType,
+        )
+      ) {
         return WrittenExamResult.calculateGradeCreditsAndGradePointCredits(
           marksBySubject,
         );
@@ -55,6 +63,7 @@ class ResultService {
           marksBySubject,
         );
       }
+
       return marksBySubject;
     });
 

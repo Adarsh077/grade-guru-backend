@@ -78,7 +78,12 @@ class LabExamResultService {
       }
 
       if (exam.examName === ExamNamesEnum.TOT) {
-        return { ...exam, grade: TOTGrade };
+        return {
+          ...exam,
+          grade: TOTGrade,
+          credits: credits,
+          gpc: gp * credits,
+        };
       }
 
       return exam;
@@ -86,8 +91,6 @@ class LabExamResultService {
 
     return {
       ...marksBySubject,
-      credits: credits,
-      gpc: gp * credits,
     };
   }
 

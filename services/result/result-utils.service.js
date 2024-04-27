@@ -14,6 +14,13 @@ class ResultUtilsService {
       );
 
       if (TOTExams) marksOTotal += TOTExams.marksO;
+
+      if (subject.subjectType === SubjectTypeEnum.WRITTEN_TW) {
+        const TWExams = subject.exams.find(
+          (exam) => exam.examName === ExamNamesEnum.TW,
+        );
+        if (TWExams) marksOTotal += TWExams.marksO;
+      }
     }
 
     return marksOTotal;
@@ -23,7 +30,11 @@ class ResultUtilsService {
     let creditsTotal = 0;
 
     for (const subject of subjects) {
-      if (subject.credits) creditsTotal += subject.credits;
+      for (const exam of subject.exams) {
+        if (exam.credits) {
+          creditsTotal += exam.credits;
+        }
+      }
     }
 
     return creditsTotal;
@@ -33,7 +44,9 @@ class ResultUtilsService {
     let gpcTotal = 0;
 
     for (const subject of subjects) {
-      if (subject.gpc) gpcTotal += subject.gpc;
+      for (const exam of subject.exams) {
+        if (exam.gpc) gpcTotal += exam.gpc;
+      }
     }
 
     return gpcTotal;
@@ -291,7 +304,9 @@ class ResultUtilsService {
   getFailedIASubjects(marksBySubjects) {
     return marksBySubjects.filter(
       (subject) =>
-        subject.subjectType === SubjectTypeEnum.WRITTEN &&
+        [SubjectTypeEnum.WRITTEN, SubjectTypeEnum.WRITTEN_TW].includes(
+          subject.subjectType,
+        ) &&
         subject.exams.find((exam) => {
           const minMarks = minMarksByExamName[exam.examName];
           return (
@@ -306,7 +321,9 @@ class ResultUtilsService {
   getFailedESESubjects(marksBySubjects) {
     return marksBySubjects.filter(
       (subject) =>
-        subject.subjectType === SubjectTypeEnum.WRITTEN &&
+        [SubjectTypeEnum.WRITTEN, SubjectTypeEnum.WRITTEN_TW].includes(
+          subject.subjectType,
+        ) &&
         subject.exams.find((exam) => {
           const minMarks = minMarksByExamName[exam.examName];
           return (

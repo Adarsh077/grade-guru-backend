@@ -1,4 +1,4 @@
-const { ExamNamesEnum } = require('../../enums');
+const { ExamNamesEnum, SubjectTypeEnum } = require('../../enums');
 const { marksUtils } = require('../../utils');
 const { maxMarksByExamName } = require('../../utils/marks.util');
 
@@ -6,7 +6,7 @@ class WrittenExamResultService {
   async generateWrittenExamResult(marksBySubject) {
     const totalMarks = this.calculateWrittenSubjectTotal(marksBySubject);
 
-    return {
+    const result = {
       subject: marksBySubject._id,
       subjectType: marksBySubject.subjectType,
       subjectCode: marksBySubject.code,
@@ -26,6 +26,14 @@ class WrittenExamResultService {
         },
       ],
     };
+
+    if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN_TW) {
+      result.exams.push({
+        examName: ExamNamesEnum.TW,
+        marksO: totalMarks.TW,
+      });
+    }
+    return result;
   }
 
   calculateGradeCreditsAndGradePointCredits(marksBySubject) {
@@ -38,6 +46,13 @@ class WrittenExamResultService {
     const IAMarks = marksBySubject.exams.find(
       (exam) => exam.examName === ExamNamesEnum.IA,
     ).marksOAfterGrace;
+
+    const TWMarks = marksBySubject.exams.find(
+      (exam) => exam.examName === ExamNamesEnum.TW,
+    )
+      ? marksBySubject.exams.find((exam) => exam.examName === ExamNamesEnum.TW)
+          .marksOAfterGrace
+      : null;
 
     const TOTMarks = marksBySubject.exams.find(
       (exam) => exam.examName === ExamNamesEnum.TOT,
@@ -54,6 +69,11 @@ class WrittenExamResultService {
     const IAGrade = marksUtils.gradeByMarksAndExam(
       maxMarksByExamName[ExamNamesEnum.IA],
       IAMarks,
+    );
+
+    const TWGrade = marksUtils.gradeByMarksAndExam(
+      maxMarksByExamName[ExamNamesEnum.TW],
+      TWMarks,
     );
 
     let TOTGrade = marksUtils.gradeByMarksAndExam(
@@ -84,8 +104,23 @@ class WrittenExamResultService {
         return { ...exam, grade: IAGrade };
       }
 
+      if (exam.examName === ExamNamesEnum.TW) {
+        return {
+          ...exam,
+          grade: TWGrade,
+          credits: TWGrade !== 'F' ? 1 : 0,
+          gpc:
+            marksUtils.gradePointByGrade(TWGrade) * (TWGrade !== 'F' ? 1 : 0),
+        };
+      }
+
       if (exam.examName === ExamNamesEnum.TOT) {
-        return { ...exam, grade: TOTGrade };
+        return {
+          ...exam,
+          grade: TOTGrade,
+          credits: credits,
+          gpc: gp * credits,
+        };
       }
 
       return exam;
@@ -93,8 +128,6 @@ class WrittenExamResultService {
 
     return {
       ...marksBySubject,
-      credits: credits,
-      gpc: gp * credits,
     };
   }
 
@@ -129,6 +162,12 @@ class WrittenExamResultService {
 
     totalMarks[ExamNamesEnum.TOT] =
       totalMarks[ExamNamesEnum.IA] + totalMarks[ExamNamesEnum.ESE];
+
+    if (marksBySubject.subjectType === SubjectTypeEnum.WRITTEN_TW) {
+      totalMarks[ExamNamesEnum.TW] = marksBySubject.exams.find(
+        (exam) => exam.examName === ExamNamesEnum.TW,
+      ).marksScored;
+    }
 
     return totalMarks;
   }

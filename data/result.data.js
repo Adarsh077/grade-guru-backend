@@ -40,8 +40,9 @@ class ResultDataLayer {
       filter.subjectGroup = new mongoose.Types.ObjectId(subjectGroupId);
     }
 
-    const result =
-      await ResultModel.findOne(filter).populate('students.student');
+    const result = await ResultModel.findOne(filter)
+      .populate('students.student')
+      .populate('students.marks.subject');
 
     return { result };
   }

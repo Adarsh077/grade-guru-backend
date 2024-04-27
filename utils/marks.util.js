@@ -75,7 +75,7 @@ const gradePointByGrade = (grade) => {
     F: 0,
   };
 
-  return gradePointsByGrade[grade];
+  return gradePointsByGrade[grade] || 0;
 };
 
 module.exports = {

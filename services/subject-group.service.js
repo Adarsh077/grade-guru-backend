@@ -304,7 +304,7 @@ class SubjectGroupService {
         marksBySubject.exams.find((exam) => exam.symbols.includes('F')),
       );
       const { subjects } = await subjectDataLayer.findAll({
-        subjectIds: failedSubjects.map((subject) => subject.subject),
+        subjectIds: failedSubjects.map((subject) => subject.subject._id),
       });
       failedStudentsWithSubjects.push({
         email: failedStudent.student.email,
