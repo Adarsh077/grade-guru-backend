@@ -152,6 +152,7 @@ class SubjectGroupService {
             name: marks.student.name,
             iatSeatNo: marks.iatSeatNo,
             eseSeatNo: marks.eseSeatNo,
+            hasParticipatedInNss: marks.hasParticipatedInNss,
           });
         }
       }

@@ -103,11 +103,15 @@ class ResultService {
 
     const marksOTotal = ResultUtils.getMarkOTotal(marksAfterGrace);
     const creditsTotal = ResultUtils.getCreditsTotal(marksAfterGrace);
-    const gpcTotal = ResultUtils.getGPCTotal(marksAfterGrace);
+    let gpcTotal = ResultUtils.getGPCTotal(marksAfterGrace);
+    if (marksByStudent.hasParticipatedInNss) {
+      gpcTotal += 2.4;
+    }
 
     const sgpi = hasFailed
       ? 0
       : ResultUtils.roundUpToTwoDecimals(gpcTotal / creditsTotal);
+
     const cgpi = hasFailed
       ? 0
       : await this.calculateCGPIForStudent(marksByStudent.studentId, {

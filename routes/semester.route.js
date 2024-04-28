@@ -27,6 +27,10 @@ router
   );
 
 router
+  .route('/:semesterId/enroll-students-in-nss')
+  .post(semesterController.enrollStudentsInNss);
+
+router
   .route('/:semesterId/subject-groups')
   .post(subjectGroupValidator.create, subjectGroupController.create)
   .get(subjectGroupValidator.findAll, subjectGroupController.findAll);

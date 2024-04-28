@@ -1,4 +1,7 @@
 const { semesterService, batchService } = require('../services');
+const marksBySubjectService = require('../services/marks-by-subject.service');
+const subjectGroupService = require('../services/subject-group.service');
+const subjectService = require('../services/subject.service');
 const { catchAsync } = require('../utils');
 
 exports.create = catchAsync(async (req, res) => {
@@ -103,6 +106,33 @@ exports.enrolledStudentList = catchAsync(async (req, res) => {
   res.send({
     status: 'success',
     body: { students },
+  });
+});
+
+exports.enrollStudentsInNss = catchAsync(async (req, res) => {
+  const { semesterId } = req.params;
+  const { students } = req.body;
+
+  const { subjectGroups } = await subjectGroupService.findAll({
+    semesterId,
+  });
+
+  const { subjects } = await subjectService.findAll({
+    subjectGroupIds: subjectGroups.map((subjectGroup) => `${subjectGroup._id}`),
+  });
+
+  for (const subject of subjects) {
+    for (const student of students) {
+      await marksBySubjectService.enterMarksFor({
+        subjectId: subject._id,
+        studentId: student.studentId,
+        hasParticipatedInNss: student.hasParticipatedInNss,
+      });
+    }
+  }
+
+  res.send({
+    status: 'success',
   });
 });
 
