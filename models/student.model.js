@@ -63,6 +63,10 @@ const StudentSchema = new mongoose.Schema(
       default: StudentStatusEnum.PASS,
     },
     resultBySemesters: {
+      semester1: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
       semester2: {
         type: ResultBySemesterSchema,
         default: null,
@@ -76,6 +80,10 @@ const StudentSchema = new mongoose.Schema(
         default: null,
       },
       semester5: {
+        type: ResultBySemesterSchema,
+        default: null,
+      },
+      semester6: {
         type: ResultBySemesterSchema,
         default: null,
       },

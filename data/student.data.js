@@ -59,7 +59,7 @@ class StudentDataLayer {
     return { student };
   }
 
-  async update(studentId, { name, email }) {
+  async update(studentId, { name, email, status }) {
     const updateObject = {};
 
     if (name) {
@@ -68,6 +68,9 @@ class StudentDataLayer {
 
     if (email) {
       updateObject.email = email;
+    }
+    if (status) {
+      updateObject.status = status;
     }
 
     const student = await StudentsModel.findOneAndUpdate(

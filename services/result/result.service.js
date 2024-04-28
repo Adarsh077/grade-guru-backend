@@ -3,6 +3,7 @@ const {
   FinalResultEnum,
   ResultBySemesterStatusEnum,
   ExamNamesEnum,
+  StudentStatusEnum,
 } = require('../../enums');
 const WrittenExamResult = require('./written-exam-result.service');
 const LabExamResult = require('./lab-exam-result.service');
@@ -115,6 +116,7 @@ class ResultService {
     const cgpi = hasFailed
       ? 0
       : await this.calculateCGPIForStudent(marksByStudent.studentId, {
+          semesterId,
           gpcTotal,
           creditsTotal,
         });
@@ -147,9 +149,14 @@ class ResultService {
 
   async calculateCGPIForStudent(studentId, data) {
     let { gpcTotal = 0, creditsTotal = 0 } = data;
+    const { semesterId } = data;
     const { student } = await studentDataLayer.findById(studentId);
 
+    const { semester } = await semesterDataLayer.findById(semesterId);
+
     for (const resultSemester in student.resultBySemesters) {
+      if (resultSemester === `semester${semester.number}`) continue;
+
       if (!student.resultBySemesters[resultSemester]) continue;
 
       const { resultId } = student.resultBySemesters[resultSemester];
@@ -215,7 +222,57 @@ class ResultService {
       studentId: resultOfStudent.student,
     });
 
+    const hasDrop = await this.checkIfHasDrop(resultOfStudent.student);
+
+    if (hasDrop) {
+      await studentDataLayer.update(resultOfStudent.student, {
+        status: StudentStatusEnum.DROP,
+      });
+    } else {
+      await studentDataLayer.update(resultOfStudent.student, {
+        status:
+          resultOfStudent.finalResult === FinalResultEnum.F
+            ? ResultBySemesterStatusEnum.ATKT
+            : ResultBySemesterStatusEnum.PASS,
+      });
+    }
+
     return { result };
+  }
+
+  async checkIfHasDrop(studentId) {
+    const { student } = await studentDataLayer.findById(studentId);
+
+    const resultIds = Object.keys(student.resultBySemesters)
+      .filter((resultSemester) => student.resultBySemesters[resultSemester])
+      .map(
+        (resultSemester) => student.resultBySemesters[resultSemester].resultId,
+      );
+
+    let atktCount = 0;
+    for (const resultId of resultIds) {
+      if (atktCount > 4) {
+        return true;
+      }
+
+      const { result } = await resultDataLayer.findById(resultId);
+
+      const studentResult = result.students.find(
+        (s) => `${s.student}` === `${studentId}`,
+      );
+
+      if (!studentResult) continue;
+
+      const failedSubects = studentResult.marks.filter((mark) =>
+        mark.exams.find((exam) => exam.symbols.includes('F')),
+      );
+
+      if (failedSubects && failedSubects.length) {
+        atktCount += failedSubects.length;
+      }
+    }
+
+    return atktCount > 4;
   }
 }
 
