@@ -22,6 +22,7 @@ class SubjectService {
       subjectType,
       isATKTSubject,
       gender,
+      isMarksEntryLocked,
     } = data;
 
     const { subject } = await subjectDataLayer.create({
@@ -33,6 +34,7 @@ class SubjectService {
       subjectType,
       isATKTSubject,
       gender,
+      isMarksEntryLocked,
     });
 
     return { subject };
@@ -74,10 +76,11 @@ class SubjectService {
     return { subject };
   }
 
-  async updateById(subjectId, { name, staffId }) {
+  async updateById(subjectId, { name, staffId, isMarksEntryLocked }) {
     const { subject } = await subjectDataLayer.updateById(subjectId, {
       name,
       staffId,
+      isMarksEntryLocked,
     });
 
     return { subject };

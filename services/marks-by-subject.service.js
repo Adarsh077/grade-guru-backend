@@ -1,4 +1,5 @@
-const { marksBySubjectDataLayer } = require('../data');
+const { marksBySubjectDataLayer, subjectDataLayer } = require('../data');
+const { AppError } = require('../utils');
 
 class MarksBySubjectService {
   async enterMarksFor(data) {
@@ -9,6 +10,12 @@ class MarksBySubjectService {
       marksScored,
       hasParticipatedInNss,
     } = data;
+
+    const { subject } = await subjectDataLayer.findById(subjectId);
+
+    if (subject.isMarksEntryLocked) {
+      throw new AppError({ message: 'Marks Entry Locked!' });
+    }
 
     const { marksBySubject } = await marksBySubjectDataLayer.enterMarksFor({
       subjectId,

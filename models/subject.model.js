@@ -46,6 +46,10 @@ const SubjectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isMarksEntryLocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

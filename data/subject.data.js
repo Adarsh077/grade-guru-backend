@@ -11,6 +11,7 @@ class SubjectDataLayer {
       subjectType,
       credits,
       isATKTSubject,
+      isMarksEntryLocked,
     } = data;
 
     const subject = await SubjectModel.create({
@@ -21,6 +22,7 @@ class SubjectDataLayer {
       subjectType,
       credits,
       isATKTSubject,
+      isMarksEntryLocked,
     });
 
     return { subject };
@@ -75,7 +77,7 @@ class SubjectDataLayer {
 
   async updateById(
     subjectId,
-    { name, staffId, subjectType, enrolledStudentCount },
+    { name, staffId, subjectType, enrolledStudentCount, isMarksEntryLocked },
   ) {
     const updateData = {};
     if (name) {
@@ -93,9 +95,12 @@ class SubjectDataLayer {
     if (enrolledStudentCount) {
       updateData.enrolledStudentCount = enrolledStudentCount;
     }
+    if (typeof isMarksEntryLocked === 'boolean') {
+      updateData.isMarksEntryLocked = isMarksEntryLocked;
+    }
 
     const subject = await SubjectModel.findOneAndUpdate(
-      { _id: new mongoose.Types.ObjectId(subjectId), isDeleted: false },
+      { _id: new mongoose.Types.ObjectId(`${subjectId}`), isDeleted: false },
       {
         $set: updateData,
       },

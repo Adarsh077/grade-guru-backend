@@ -1,3 +1,4 @@
+const { StudentTypeEnum } = require('../enums');
 const { studentService } = require('../services');
 const { catchAsync } = require('../utils');
 

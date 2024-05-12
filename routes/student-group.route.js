@@ -27,6 +27,10 @@ router
   .get(subjectGroupController.enrolledStudentList);
 
 router
+  .route('/:subjectGroupId/lock')
+  .post(subjectGroupController.lockMarksEntry);
+
+router
   .route('/:subjectGroupId/result')
   .post(subjectGroupController.generateResultBy)
   .get(resultController.getResultsBy);

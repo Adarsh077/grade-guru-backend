@@ -125,6 +125,18 @@ class SubjectGroupService {
     return { subjectGroup };
   }
 
+  async lockMarksEntry(subjectGroupId) {
+    const { subjects } = await subjectDataLayer.findAll({
+      subjectGroupId: subjectGroupId,
+    });
+
+    for (const subject of subjects) {
+      await subjectDataLayer.updateById(subject._id, {
+        isMarksEntryLocked: true,
+      });
+    }
+  }
+
   async enrolledStudentList(subjectGroupId) {
     const { subjectGroup } =
       await subjectGroupDataLayer.findById(subjectGroupId);

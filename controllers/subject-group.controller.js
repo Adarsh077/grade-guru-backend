@@ -130,3 +130,13 @@ exports.sendRevaluationReminder = catchAsync(async (req, res) => {
     status: 'success',
   });
 });
+
+exports.lockMarksEntry = catchAsync(async (req, res) => {
+  const { subjectGroupId } = req.params;
+
+  await subjectGroupService.lockMarksEntry(subjectGroupId);
+
+  res.send({
+    status: 'success',
+  });
+});
